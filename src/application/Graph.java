@@ -1,7 +1,12 @@
+package application;
+
 import java.util.List;
 import java.util.Set;
 
-public class Graph implements GraphADT{
+/**
+ *
+ */
+public class Graph implements GraphADT {
 
     @Override
     public void addVertex(String vertex) {

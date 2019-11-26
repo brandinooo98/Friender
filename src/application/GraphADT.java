@@ -1,3 +1,5 @@
+package application;
+
 import java.util.List;
 import java.util.Set;
 /**
@@ -12,12 +14,12 @@ public interface GraphADT {
      * Add new vertex to the graph.
      *
      * If vertex is null or already exists,
-     * method ends without adding a vertex or 
+     * method ends without adding a vertex or
      * throwing an exception.
      *
      * Valid argument conditions:
      * 1. vertex is non-null
-     * 2. vertex is not already in the graph 
+     * 2. vertex is not already in the graph
      *
      * @param vertex the vertex to be added
      */
@@ -25,16 +27,16 @@ public interface GraphADT {
 
 
     /**
-     * Remove a vertex and all associated 
+     * Remove a vertex and all associated
      * edges from the graph.
      *
      * If vertex is null or does not exist,
-     * method ends without removing a vertex, edges, 
+     * method ends without removing a vertex, edges,
      * or throwing an exception.
      *
      * Valid argument conditions:
      * 1. vertex is non-null
-     * 2. vertex is not already in the graph 
+     * 2. vertex is not already in the graph
      *
      * @param vertex the vertex to be removed
      */
@@ -54,7 +56,7 @@ public interface GraphADT {
      *
      * Valid argument conditions:
      * 1. neither vertex is null
-     * 2. both vertices are in the graph 
+     * 2. both vertices are in the graph
      * 3. the edge is not in the graph
      *
      * @param vertex1 the first vertex (src)
@@ -72,7 +74,7 @@ public interface GraphADT {
      *
      * Valid argument conditions:
      * 1. neither vertex is null
-     * 2. both vertices are in the graph 
+     * 2. both vertices are in the graph
      * 3. the edge from vertex1 to vertex2 is in the graph
      *
      * @param vertex1 the first vertex
@@ -92,11 +94,11 @@ public interface GraphADT {
     /**
      * Get all the neighbor (adjacent-dependencies) of a vertex
      *
-     * For the example graph, A->[B, C], D->[A, B] 
-     *     getAdjacentVerticesOf(A) should return [B, C]. 
+     * For the example graph, A->[B, C], D->[A, B]
+     *     getAdjacentVerticesOf(A) should return [B, C].
      *
-     * In terms of packages, this list contains the immediate 
-     * dependencies of A and depending on your graph structure, 
+     * In terms of packages, this list contains the immediate
+     * dependencies of A and depending on your graph structure,
      * this could be either the predecessors or successors of A.
      *
      * @param vertex the specified vertex
