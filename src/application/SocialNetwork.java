@@ -8,12 +8,13 @@ import java.util.*;
 /**
  *
  */
-public class SocialNetwork {
+public class SocialNetwork implements SocialNetworkADT{
     private Graph graph;
     private Graph graphCopy;
 
-    /*
-     * SocialNetwork default no-argument constructor.
+
+    /**
+     *
      */
     public SocialNetwork() {
         graph = new Graph(); // Initializes graph
@@ -21,18 +22,11 @@ public class SocialNetwork {
     }
 
     /**
-     * Takes in a file path for a json file and builds the
-     * package dependency graph from it.
-     *
-     */
-    public void constructGraph() {
-    }
-
-    /**
      * Helper method to get all Users in the graph.
      *
      * @return Set<String> of all the Users
      */
+    @Override
     public Set<String> getAllUsers() {
         return graph.getAllVertices();
     }
@@ -40,6 +34,7 @@ public class SocialNetwork {
     /**
      * @param username
      */
+    @Override
     public void addUser(String username){
 
     }
@@ -48,10 +43,12 @@ public class SocialNetwork {
      * @param user
      * @param friend
      */
+    @Override
     public void addFriend(String user, String friend){
 
     }
 
+    @Override
     public void removeFriend(String user, String friend){
 
     }
@@ -60,6 +57,7 @@ public class SocialNetwork {
      * @param user
      * @return
      */
+    @Override
     public List<User> shortestPath(String user){
         // Dijsktra
         return null;
@@ -68,6 +66,7 @@ public class SocialNetwork {
     /**
      * @param username
      */
+    @Override
     public void export(String username){
 
     }
@@ -76,6 +75,7 @@ public class SocialNetwork {
      * @param username
      * @return
      */
+    @Override
     public List<User> getFriends(String username){
         return null;
     }
@@ -85,6 +85,7 @@ public class SocialNetwork {
      * @param user2
      * @return
      */
+    @Override
     public List<User> getMutualFriends(String user1, String user2){
         return null;
     }
@@ -92,6 +93,7 @@ public class SocialNetwork {
     /**
      *
      */
+    @Override
     public void displayStatus(){
 
     }
