@@ -1,38 +1,17 @@
 package application;
 
-import java.util.ArrayList;
-
-/**
- *
- */
 public class User {
-    String username;
-    ArrayList<User> friendsList;
+	protected String username;
 
-    public User(String username){
-        this.username = username;
-        this.friendsList = new ArrayList<>();
-    }
+	public User(String username) {
+		this.username = username;
+	}
 
-    /**
-     * @param username
-     * @return
-     */
-    public User getFriend(String username){
-        return null;
-    }
-
-    /**
-     * @param friend
-     */
-    public void addFriend(User friend){
-
-    }
-
-    /**
-     * @param friend
-     */
-    public void removeFriend(User friend){
-
-    }
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	
+	public String getUsername() {
+		return this.username;
+	}
 }

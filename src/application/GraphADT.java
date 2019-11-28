@@ -23,7 +23,7 @@ public interface GraphADT {
      *
      * @param vertex the vertex to be added
      */
-    public void addVertex(String vertex);
+    public void addVertex(User vertex);
 
 
     /**
@@ -40,7 +40,7 @@ public interface GraphADT {
      *
      * @param vertex the vertex to be removed
      */
-    public void removeVertex(String vertex);
+    public void removeVertex(User vertex);
 
 
     /**
@@ -62,7 +62,7 @@ public interface GraphADT {
      * @param vertex1 the first vertex (src)
      * @param vertex2 the second vertex (dst)
      */
-    public void addEdge(String vertex1, String vertex2);
+    public void addEdge(User vertex1, User vertex2);
 
 
     /**
@@ -80,7 +80,7 @@ public interface GraphADT {
      * @param vertex1 the first vertex
      * @param vertex2 the second vertex
      */
-    public void removeEdge(String vertex1, String vertex2);
+    public void removeEdge(User vertex1, User vertex2);
 
 
     /**
@@ -88,7 +88,7 @@ public interface GraphADT {
      *
      * @return a Set<String> which contains all the vertices in the graph
      */
-    public Set<String> getAllVertices();
+    public Set<User> getAllVertices();
 
 
     /**
@@ -104,7 +104,7 @@ public interface GraphADT {
      * @param vertex the specified vertex
      * @return an List<String> of all the adjacent vertices for specified vertex
      */
-    public List<String> getAdjacentVerticesOf(String vertex);
+    public List<User> getAdjacentVerticesOf(User vertex);
 
 
     /**
