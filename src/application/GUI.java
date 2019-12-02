@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
@@ -19,6 +20,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.control.Button;
+import javafx.scene.canvas.Canvas;
 
 /**
  *
@@ -42,7 +44,13 @@ public class GUI extends Application {
         args = this.getParameters().getRaw();
         socialNetwork = new SocialNetwork();
 
-        Scene mainScene = new Scene();
+        // Graph visualization
+        Canvas graph = new Canvas(600, 600);
+        GraphicsContext gc = graph.getGraphicsContext2D();
+
+        BorderPane root = new BorderPane();
+        root.setCenter(graph);
+        Scene mainScene = new Scene(root);
 
         // Makes window size of screen
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
@@ -61,7 +69,7 @@ public class GUI extends Application {
      * @param user
      */
     public void friendManagement(User user){
-        Scene friendScene = new Scene();
+     //   Scene friendScene = new Scene();
 
         // Makes window size of screen
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
@@ -72,7 +80,7 @@ public class GUI extends Application {
 
         // Puts scene in window
         window.setTitle(APP_TITLE);
-        window.setScene(friendScene);
+   //     window.setScene(friendScene);
         window.show();
     }
 
@@ -80,7 +88,7 @@ public class GUI extends Application {
      * @param user
      */
     public void userInformation(User user){
-        Scene userScene = new Scene();
+    //    Scene userScene = new Scene();
 
         // Makes window size of screen
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
@@ -91,7 +99,7 @@ public class GUI extends Application {
 
         // Puts scene in window
         window.setTitle(APP_TITLE);
-        window.setScene(userScene);
+   //     window.setScene(userScene);
         window.show();
     }
 
@@ -99,7 +107,7 @@ public class GUI extends Application {
      * @param user
      */
     public void friendImportExport(User user){
-        Scene commandScene = new Scene();
+    //    Scene commandScene = new Scene();
 
         // Makes window size of screen
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
@@ -110,7 +118,7 @@ public class GUI extends Application {
 
         // Puts scene in window
         window.setTitle(APP_TITLE);
-        window.setScene(commandScene);
+   //     window.setScene(commandScene);
         window.show();
     }
 
