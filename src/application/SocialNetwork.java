@@ -22,7 +22,12 @@ public class SocialNetwork implements SocialNetworkADT{
      */
     @Override
     public Set<String> getAllUsers() {
-        return graph.getAllVertices();
+    	Set<String> names = new HashSet<String>();
+        Set<User> users = graph.getAllVertices();
+        
+        users.stream().forEach(e -> names.add(e.username));
+        
+        return names;
     }
 
     /**
@@ -30,7 +35,9 @@ public class SocialNetwork implements SocialNetworkADT{
      */
     @Override
     public void addUser(String username){
-
+    	if (findUser(username) == null) {
+    		graph.addVertex(new User(username));
+    	}
     }
 
     /**
@@ -39,7 +46,17 @@ public class SocialNetwork implements SocialNetworkADT{
      */
     @Override
     public void addFriend(String user, String friend){
-
+    	User user1 = findUser(user);
+    	User user2 = findUser(friend);
+    	
+    	if (user1 == null) {
+    		user1 = new User(user);
+    	}
+    	if (user2 == null) {
+    		user2 = new User(friend);
+    	}
+    	
+    	graph.addEdge(user1, user2);
     }
 
     @Override
@@ -115,5 +132,6 @@ public class SocialNetwork implements SocialNetworkADT{
             if (username.equals(user.username))
                 return user;
         }
+        return null;
     }
 }
