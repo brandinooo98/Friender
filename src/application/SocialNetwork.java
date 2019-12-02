@@ -34,7 +34,7 @@ public class SocialNetwork implements SocialNetworkADT{
      * @param username
      */
     @Override
-    public void addUser(String username){
+    public void addUser(String username) throws UserNotFoundException {
     	if (findUser(username) == null) {
     		graph.addVertex(new User(username));
     	}
@@ -45,7 +45,7 @@ public class SocialNetwork implements SocialNetworkADT{
      * @param friend
      */
     @Override
-    public void addFriend(String user, String friend){
+    public void addFriend(String user, String friend) throws UserNotFoundException {
     	User user1 = findUser(user);
     	User user2 = findUser(friend);
     	
@@ -60,7 +60,7 @@ public class SocialNetwork implements SocialNetworkADT{
     }
 
     @Override
-    public void removeFriend(String user, String friend){
+    public void removeFriend(String user, String friend) throws UserNotFoundException {
     	User user1 = findUser(user);
     	User user2 = findUser(friend);
     	
@@ -89,7 +89,7 @@ public class SocialNetwork implements SocialNetworkADT{
      * @return
      */
     @Override
-    public List<User> getFriends(String username){
+    public List<User> getFriends(String username) throws UserNotFoundException {
     	if (findUser(username) != null) {
     		return graph.getAdjacentVerticesOf(findUser(username));
     	}

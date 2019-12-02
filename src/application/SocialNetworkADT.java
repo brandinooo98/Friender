@@ -15,19 +15,19 @@ public interface SocialNetworkADT{
     /**
      * @param username
      */
-    public void addUser(String username);
+    public void addUser(String username) throws UserNotFoundException;
 
     /**
      * @param user
      * @param friend
      */
-    public void addFriend(String user, String friend);
+    public void addFriend(String user, String friend) throws UserNotFoundException;
 
     /**
      * @param user
      * @param friend
      */
-    public void removeFriend(String user, String friend);
+    public void removeFriend(String user, String friend) throws UserNotFoundException;
 
     /**
      * @param user
@@ -44,7 +44,7 @@ public interface SocialNetworkADT{
      * @param username
      * @return
      */
-    public List<User> getFriends(String username);
+    public List<User> getFriends(String username) throws UserNotFoundException;
 
     /**
      * @param user1
