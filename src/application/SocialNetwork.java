@@ -1,8 +1,5 @@
 package application;
 
-import application.Graph;
-import application.User;
-
 import java.util.*;
 
 /**
@@ -10,15 +7,12 @@ import java.util.*;
  */
 public class SocialNetwork implements SocialNetworkADT{
     private Graph graph;
-    private Graph graphCopy;
-
 
     /**
      *
      */
     public SocialNetwork() {
         graph = new Graph(); // Initializes graph
-        graphCopy = new Graph();
     }
 
     /**
@@ -96,5 +90,30 @@ public class SocialNetwork implements SocialNetworkADT{
     @Override
     public void displayStatus(){
 
+    }
+
+    /**
+     * @param username
+     * @return
+     */
+    @Override
+    public List<User> graphTraversal(String username) {
+        LinkedList<User> visited = new LinkedList<>(); // Stores vertices already traversed through
+        LinkedList<User> queue = new LinkedList<>(); // Used for traversal
+        visited.add(findUser(username));
+
+        return null;
+    }
+
+    /**
+     * @param username
+     * @return
+     */
+    private User findUser(String username){
+        Set<User> users = graph.getAllVertices();
+        for (User user : users){
+            if (username.equals(user.username))
+                return user;
+        }
     }
 }

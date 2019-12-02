@@ -56,4 +56,6 @@ public interface SocialNetworkADT{
      *
      */
     public void displayStatus();
+
+    public List<User> graphTraversal(String username);
 }
