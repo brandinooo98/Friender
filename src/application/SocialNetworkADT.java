@@ -16,14 +16,14 @@ public interface SocialNetworkADT{
      * @param username
      * @throws UserNotFoundException 
      */
-    public void addUser(String username);
+    public void addUser(String username) throws UserNotFoundException;
 
     /**
      * @param user
      * @param friend
      * @throws UserNotFoundException 
      */
-    public void addFriend(String user, String friend);
+    public void addFriend(String user, String friend) throws UserNotFoundException;
 
     /**
      * @param user
