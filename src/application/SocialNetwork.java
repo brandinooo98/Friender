@@ -61,7 +61,9 @@ public class SocialNetwork implements SocialNetworkADT{
 
     @Override
     public void removeFriend(String user, String friend){
-
+    	User user1 = findUser(user);
+    	User user2 = findUser(friend);
+    	
     }
 
     /**
@@ -88,7 +90,10 @@ public class SocialNetwork implements SocialNetworkADT{
      */
     @Override
     public List<User> getFriends(String username){
-        return null;
+    	if (findUser(username) != null) {
+    		return graph.getAdjacentVerticesOf(findUser(username));
+    	}
+    	return null;
     }
 
     /**
