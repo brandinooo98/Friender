@@ -71,7 +71,8 @@ public class Graph implements GraphADT {
 	public void removeEdge(User vertex1, User vertex2) {
 		if (vertex1 != null && vertex2 != null) {
 			if (graph.containsKey(vertex1) && graph.containsKey(vertex2)) {
-				if (graph.get(vertex1).contains(vertex2) && graph.get(vertex2).contains(vertex1)) {
+				if (graph.get(vertex1).contains(vertex2)
+						&& graph.get(vertex2).contains(vertex1)) {
 					graph.get(vertex1).remove(vertex2);
 					graph.get(vertex2).remove(vertex1);
 				}
@@ -95,23 +96,13 @@ public class Graph implements GraphADT {
 		return graph.get(vertex);
 	}
 
-	/**
-	 * gets number of edges in graph
-	 */
 	@Override
-	public int size() {
-		int size = 0;
-		for (List<User> value : graph.values()) {
-			size += value.size();
+	public User getNode(String username) throws UserNotFoundException {
+		Set<User> users = this.graph.keySet();
+		for (User user : users) {
+			if (username.equals(user.username))
+				return user;
 		}
-		return size;
-	}
-
-	/**
-	 * gets number of verticies in the graph
-	 */
-	@Override
-	public int order() {
-		return graph.keySet().size();
+		throw new UserNotFoundException();
 	}
 }

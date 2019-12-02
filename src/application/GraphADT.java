@@ -84,14 +84,6 @@ public interface GraphADT {
 
 
     /**
-     * Returns a Set that contains all the vertices
-     *
-     * @return a Set<String> which contains all the vertices in the graph
-     */
-    public Set<User> getAllVertices();
-
-
-    /**
      * Get all the neighbor (adjacent-dependencies) of a vertex
      *
      * For the example graph, A->[B, C], D->[A, B]
@@ -105,19 +97,21 @@ public interface GraphADT {
      * @return an List<String> of all the adjacent vertices for specified vertex
      */
     public List<User> getAdjacentVerticesOf(User vertex);
-
+    
+    /**
+     * method to find the User given the username String
+     * @param vertex
+     * @return
+     * @throws UserNotFoundException 
+     */
+    public User getNode(String username) throws UserNotFoundException;
+    
 
     /**
-     * Returns the number of edges in this graph.
-     * @return number of edges in the graph.
+     * Returns a Set that contains all the vertices
+     *
+     * @return a Set<String> which contains all the vertices in the graph
      */
-    public int size();
-
-
-    /**
-     * Returns the number of vertices in this graph.
-     * @return number of vertices in graph.
-     */
-    public int order();
+    public Set<User> getAllVertices();
 
 }
