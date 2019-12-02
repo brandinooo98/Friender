@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface SocialNetworkADT{
+	
     /**
      * Helper method to get all Users in the graph.
      *
