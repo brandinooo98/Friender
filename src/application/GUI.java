@@ -29,6 +29,7 @@ public class GUI extends Application {
     private List<String> args;
     private static final String APP_TITLE = "Friender";
     private SocialNetwork socialNetwork;
+    Stage window;
 
     /**
      * @param primaryStage
@@ -37,6 +38,7 @@ public class GUI extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         // save args example
+        window = primaryStage;
         args = this.getParameters().getRaw();
         socialNetwork = new SocialNetwork();
 
@@ -63,36 +65,72 @@ public class GUI extends Application {
 
         // Makes window size of screen
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        primaryStage.setX(primaryScreenBounds.getMinX());
-        primaryStage.setY(primaryScreenBounds.getMinY());
-        primaryStage.setWidth(primaryScreenBounds.getWidth());
-        primaryStage.setHeight(primaryScreenBounds.getHeight());
+        window.setX(primaryScreenBounds.getMinX());
+        window.setY(primaryScreenBounds.getMinY());
+        window.setWidth(primaryScreenBounds.getWidth());
+        window.setHeight(primaryScreenBounds.getHeight());
 
         // Add the stuff and set the primary stage
-        primaryStage.setTitle(APP_TITLE);
-        primaryStage.setScene(mainScene);
-        primaryStage.show();
+        window.setTitle(APP_TITLE);
+        window.setScene(mainScene);
+        window.show();
     }
 
     /**
      * @param user
      */
     public void friendManagement(User user){
+        Scene friendScene = new Scene();
 
+        // Makes window size of screen
+        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+        window.setX(primaryScreenBounds.getMinX());
+        window.setY(primaryScreenBounds.getMinY());
+        window.setWidth(primaryScreenBounds.getWidth());
+        window.setHeight(primaryScreenBounds.getHeight());
+
+        // Puts scene in window
+        window.setTitle(APP_TITLE);
+        window.setScene(friendScene);
+        window.show();
     }
 
     /**
      * @param user
      */
     public void userInformation(User user){
+        Scene userScene = new Scene();
 
+        // Makes window size of screen
+        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+        window.setX(primaryScreenBounds.getMinX());
+        window.setY(primaryScreenBounds.getMinY());
+        window.setWidth(primaryScreenBounds.getWidth());
+        window.setHeight(primaryScreenBounds.getHeight());
+
+        // Puts scene in window
+        window.setTitle(APP_TITLE);
+        window.setScene(userScene);
+        window.show();
     }
 
     /**
      * @param user
      */
     public void friendImportExport(User user){
+        Scene commandScene = new Scene();
 
+        // Makes window size of screen
+        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+        window.setX(primaryScreenBounds.getMinX());
+        window.setY(primaryScreenBounds.getMinY());
+        window.setWidth(primaryScreenBounds.getWidth());
+        window.setHeight(primaryScreenBounds.getHeight());
+
+        // Puts scene in window
+        window.setTitle(APP_TITLE);
+        window.setScene(commandScene);
+        window.show();
     }
 
     /**
