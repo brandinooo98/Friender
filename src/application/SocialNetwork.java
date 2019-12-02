@@ -114,24 +114,40 @@ public class SocialNetwork implements SocialNetworkADT{
      * @return
      */
     @Override
-    public List<User> graphTraversal(String username) {
+    public List<User> graphTraversal(String username) throws UserNotFoundException {
         LinkedList<User> visited = new LinkedList<>(); // Stores vertices already traversed through
         LinkedList<User> queue = new LinkedList<>(); // Used for traversal
-        visited.add(findUser(username));
+        LinkedList<User> ordered = new LinkedList<>(); // Stores ordered traversal
 
-        return null;
+        User centralUser = findUser(username);
+        visited.add(centralUser);
+        queue.add(centralUser);
+
+        while (queue.size() != 0){
+            User user = queue.poll();
+            ordered.add(user);
+
+            List<User> adj = graph.getAdjacentVerticesOf(user);
+            for (User adjUser : adj){
+                if (!visited.contains(adjUser)){
+                    visited.add(adjUser);
+                    queue.add(adjUser);
+                }
+            }
+        }
+        return ordered;
     }
 
     /**
      * @param username
      * @return
      */
-    private User findUser(String username){
+    private User findUser(String username) throws UserNotFoundException {
         Set<User> users = graph.getAllVertices();
         for (User user : users){
             if (username.equals(user.username))
                 return user;
         }
-        return null;
+        throw new UserNotFoundException();
     }
 }
