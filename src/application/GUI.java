@@ -9,9 +9,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -24,7 +22,6 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
-import javafx.scene.control.Button;
 import javafx.scene.canvas.Canvas;
 
 /**
@@ -36,11 +33,12 @@ public class GUI extends Application {
 	private static final String APP_TITLE = "Friender";
 	private SocialNetwork socialNetwork;
 	private Stage window;
-
+	private User centralUser;
 	private HBox root;
 	private VBox infoVBox;
 	private VBox contentBox;
 	private HBox navBar;
+	private Rectangle2D primaryScreenBounds;
 
 	/**
 	 * @param primaryStage
@@ -48,12 +46,11 @@ public class GUI extends Application {
 	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+		primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 
-		// general instanciations
+		// General instantiations
 		root = new HBox();
 		infoVBox = new VBox();
-
 		window = primaryStage;
 		socialNetwork = new SocialNetwork();
 
@@ -72,6 +69,7 @@ public class GUI extends Application {
 
 		// BUTTONS
 		Button view = new Button("View");
+		view.setOnAction(e -> graphVisual());
 		view.setMinWidth(navBar.getMinWidth() * 0.25);
 		view.setMinHeight(navBar.getMinHeight());
 		Button edit = new Button("Edit");
@@ -129,11 +127,60 @@ public class GUI extends Application {
 		window.show();
 	}
 
+	public void graphVisual(){
+		// Initializes layout
+		root = new HBox();
+		contentBox = new VBox();
+
+		// Graph visualization
+		Canvas graph = new Canvas();
+		graph.setWidth(primaryScreenBounds.getWidth() * 0.75);
+		graph.setHeight(primaryScreenBounds.getHeight());
+		GraphicsContext gc = graph.getGraphicsContext2D();
+
+		// Adds content to scene
+		contentBox.getChildren().addAll(navBar, graph);
+		root.getChildren().addAll(contentBox, infoVBox);
+		Scene graphScene = new Scene(root);
+
+		// Makes window size of screen
+		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+		window.setX(primaryScreenBounds.getMinX());
+		window.setY(primaryScreenBounds.getMinY());
+		window.setWidth(primaryScreenBounds.getWidth());
+		window.setHeight(primaryScreenBounds.getHeight());
+
+		// Puts scene in window
+		window.setTitle(APP_TITLE);
+		window.setScene(graphScene);
+		window.show();
+	}
+
 	/**
-	 * @param user
 	 */
 	public void friendManagement() {
-		// Scene friendScene = new Scene();
+		// Initializes layout
+		root = new HBox();
+		contentBox = new VBox();
+		VBox content = new VBox();
+		HBox add = new HBox();
+		HBox remove = new HBox();
+
+		// Add area creation
+		Label addLabel = new Label("Add:");
+		TextArea addArea = new TextArea();
+		add.getChildren().addAll(addLabel, addArea);
+
+		// Remove area creation
+		Label removeLabel = new Label("Remove");
+		TextArea removeArea = new TextArea();
+		remove.getChildren().addAll(removeLabel, removeArea);
+
+		// Adds content to scene
+		content.getChildren().addAll(add, remove);
+		contentBox.getChildren().addAll(navBar, content);
+		root.getChildren().addAll(contentBox, infoVBox);
+		Scene friendScene = new Scene(root);
 
 		// Makes window size of screen
 		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
@@ -144,15 +191,44 @@ public class GUI extends Application {
 
 		// Puts scene in window
 		window.setTitle(APP_TITLE);
-		// window.setScene(friendScene);
+		window.setScene(friendScene);
 		window.show();
 	}
 
 	/**
-	 * @param user
 	 */
 	public void userInformation() {
-		// Scene userScene = new Scene();
+		// Initializes layout
+		root = new HBox();
+		contentBox = new VBox();
+		HBox content = new HBox();
+		VBox friendList = new VBox();
+		VBox friendSearch = new VBox();
+		HBox currentUserArea = new HBox();
+
+		// Friends list creation
+		Label listLabel = new Label("Friends");
+		ListView list = new ListView();
+//		for (User user : socialNetwork.getFriends(centralUser.username))
+//			list.getItems().add(user.username);
+		friendList.getChildren().addAll(listLabel, list);
+
+		// Current user creation
+		Label userLabel = new Label("Current User: ");
+		Text userText = new Text("username"); // TODO
+		currentUserArea.getChildren().addAll(userLabel, userText);
+
+		// Friend search creation
+		Label searchLabel = new Label("Find Friend:");
+		TextArea searchBar = new TextArea();
+		Button searchButton = new Button("Search");
+		friendSearch.getChildren().addAll(currentUserArea, searchLabel, searchBar, searchButton);
+
+		// Adds content to the scene
+		content.getChildren().addAll(friendList, friendSearch);
+		contentBox.getChildren().addAll(navBar, content);
+		root.getChildren().addAll(contentBox, infoVBox);
+		Scene userScene = new Scene(root);
 
 		// Makes window size of screen
 		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
@@ -163,15 +239,38 @@ public class GUI extends Application {
 
 		// Puts scene in window
 		window.setTitle(APP_TITLE);
-		// window.setScene(userScene);
+		window.setScene(userScene);
 		window.show();
 	}
 
 	/**
-	 * @param user
 	 */
 	public void friendImportExport() {
-		// Scene commandScene = new Scene();
+		// Initializes layout
+		root = new HBox();
+		contentBox = new VBox();
+		HBox content = new HBox();
+		VBox importExport = new VBox();
+		VBox networkControl = new VBox();
+		HBox setUser = new HBox();
+
+		// Import/Export buttons
+		Button im = new Button("Import");
+		Button export = new Button("Export");
+		importExport.getChildren().addAll(im, export);
+
+		// Set user and clear buttons and fields
+		Label setUserLabel = new Label("Set Main User:");
+		TextArea setUserArea = new TextArea();
+		setUser.getChildren().addAll(setUserLabel, setUserArea);
+
+		Button clear = new Button("Clear");
+		networkControl.getChildren().addAll(setUser, clear);
+
+		content.getChildren().addAll(importExport, networkControl);
+		contentBox.getChildren().addAll(navBar, content);
+		root.getChildren().addAll(contentBox, infoVBox);
+		Scene commandScene = new Scene(root);
 
 		// Makes window size of screen
 		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
@@ -182,7 +281,7 @@ public class GUI extends Application {
 
 		// Puts scene in window
 		window.setTitle(APP_TITLE);
-		// window.setScene(commandScene);
+		window.setScene(commandScene);
 		window.show();
 	}
 
