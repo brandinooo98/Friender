@@ -184,7 +184,7 @@ public class GUI extends Application {
 		
 	}
 
-	public void friendManagement() {		
+	public void friendManagement() {
 		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 
 		// Initializes layout
@@ -197,7 +197,7 @@ public class GUI extends Application {
 		HBox remove = new HBox();
 		VBox friendships = new VBox();
 
-		add.setPadding(new Insets(relativeHeight(250), relativeWidth(50), 0, relativeWidth(50)));
+		add.setPadding(new Insets(relativeHeight(100), relativeWidth(50), 0, relativeWidth(50)));
 		remove.setPadding(new Insets(relativeWidth(50), relativeWidth(50), relativeWidth(100), relativeWidth(50)));
 		friendships.setPadding(new Insets(relativeWidth(100), relativeWidth(50), relativeWidth(50), relativeWidth(50)));
 
@@ -208,7 +208,7 @@ public class GUI extends Application {
 
 		TextField addArea = new TextField();
 		addArea.setMaxHeight(0);
-		addArea.setMinWidth(relativeWidth(800));
+		addArea.setMinWidth(relativeWidth(500));
 		addArea.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 		
 		Button addButton = new Button("Create");
@@ -228,7 +228,7 @@ public class GUI extends Application {
 
 		TextField removeArea = new TextField();
 		removeArea.setMaxHeight(0);
-		removeArea.setMinWidth(relativeWidth(800));
+		removeArea.setMinWidth(relativeWidth(500));
 		removeArea.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 		
 		Button removeButton = new Button("Remove");
@@ -253,7 +253,7 @@ public class GUI extends Application {
 		
 		TextField fromArea = new TextField();
 		fromArea.setMaxHeight(0);
-		fromArea.setMinWidth(relativeWidth(800));
+		fromArea.setMinWidth(relativeWidth(500));
 		fromArea.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 		
 		fromBox.getChildren().addAll(fromLabel, fromArea);
@@ -267,7 +267,7 @@ public class GUI extends Application {
 		
 		TextField toArea = new TextField();
 		toArea.setMaxHeight(0);
-		toArea.setMinWidth(relativeWidth(800));
+		toArea.setMinWidth(relativeWidth(500));
 		toArea.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 		
 		toBox.getChildren().addAll(toLabel, toArea);
@@ -361,11 +361,11 @@ public class GUI extends Application {
 
 		// Import/Export buttons
 		Button im = new Button("Import");
-		im.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
+		im.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(20)));
 		im.setStyle("-fx-background-color: #ffffff;");
 		im.setPrefSize(relativeWidth(200), relativeHeight(100));
 		Button export = new Button("Export");
-		export.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
+		export.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(20)));
 		export.setStyle("-fx-background-color: #ffffff;");
 		export.setPrefSize(relativeWidth(200), relativeHeight(100));
 		importExport.getChildren().addAll(im, export);
@@ -373,7 +373,7 @@ public class GUI extends Application {
 		// Set user and clear buttons and fields
 		Label setUserLabel = new Label("Set Main User:");
 		setUserLabel.setPadding(new Insets(0, 0, relativeWidth(19), relativeWidth(15)));
-		setUserLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
+		setUserLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(20)));
 		TextField setUserField = new TextField();
 		setUserField.setPrefSize(relativeWidth(100), relativeHeight(20));
 		setUserField.setMinHeight(relativeWidth(50));
@@ -382,7 +382,7 @@ public class GUI extends Application {
 
 		Button clear = new Button("Clear");
 		clear.setOnAction(e -> socialNetwork = new SocialNetwork());
-		clear.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
+		clear.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(20)));
 		clear.setStyle("-fx-background-color: #ffffff;");
 		clear.setPrefSize(relativeWidth(200), relativeHeight(100));
 		networkControl.getChildren().addAll(setUser, clear);
