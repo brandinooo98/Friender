@@ -6,6 +6,7 @@ import java.util.List;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,6 +17,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -138,7 +141,7 @@ public class GUI extends Application {
 		window.show();
 	}
 
-	public void graphVisual(){
+	public void graphVisual() {
 		// Initializes layout
 		root = new HBox();
 		contentBox = new VBox();
@@ -166,29 +169,107 @@ public class GUI extends Application {
 		window.setScene(graphScene);
 		window.show();
 	}
+	
+	private void addUser() {
+		
+	}
 
-	/**
-	 */
 	public void friendManagement() {
 		// Initializes layout
 		root = new HBox();
 		contentBox = new VBox();
+		contentBox.setStyle("-fx-background-color: #3490D1;");
+		
 		VBox content = new VBox();
 		HBox add = new HBox();
 		HBox remove = new HBox();
+		VBox friendships = new VBox();
+
+		add.setPadding(new Insets(250, 50, 0, 50));
+		remove.setPadding(new Insets(50, 50, 100, 50));
+		friendships.setPadding(new Insets(100, 50, 50, 50));
 
 		// Add area creation
-		Label addLabel = new Label("Add:");
-		TextArea addArea = new TextArea();
-		add.getChildren().addAll(addLabel, addArea);
+		Label addLabel = new Label("Add Person: ");
+		addLabel.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		addLabel.setPadding(new Insets(0, 78, 0,0));
+
+		TextField addArea = new TextField();
+		addArea.setMaxHeight(0);
+		addArea.setMinWidth(1000);
+		addArea.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		
+		Button addButton = new Button("Create");
+		addButton.setOnAction(e -> addUser());
+		addButton.setMinHeight(75);
+		addButton.setMinWidth(200);
+		addButton.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		
+		Region filler1 = new Region();
+		HBox.setHgrow(filler1, Priority.ALWAYS);
+
+		add.getChildren().addAll(addLabel, addArea, filler1, addButton);
 
 		// Remove area creation
-		Label removeLabel = new Label("Remove");
-		TextArea removeArea = new TextArea();
-		remove.getChildren().addAll(removeLabel, removeArea);
+		Label removeLabel = new Label("Remove Person: ");
+		removeLabel.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+
+		TextField removeArea = new TextField();
+		removeArea.setMaxHeight(0);
+		removeArea.setMinWidth(1000);
+		removeArea.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		
+		Button removeButton = new Button("Remove");
+		removeButton.setMinHeight(75);
+		removeButton.setMinWidth(200);
+		removeButton.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		
+		Region filler2 = new Region();
+		HBox.setHgrow(filler2, Priority.ALWAYS);
+
+		remove.getChildren().addAll(removeLabel, removeArea, filler2, removeButton);
+		
+		// Add friendship creation
+		Label friendsLabel = new Label("Add Friendships: ");
+		friendsLabel.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		
+		HBox fromBox = new HBox();
+		fromBox.setPadding(new Insets(50, 50, 0, 50));
+		
+		Label fromLabel = new Label("From: ");
+		fromLabel.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		
+		TextField fromArea = new TextField();
+		fromArea.setMaxHeight(0);
+		fromArea.setMinWidth(1000);
+		fromArea.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		
+		fromBox.getChildren().addAll(fromLabel, fromArea);
+		
+		HBox toBox = new HBox();
+		toBox.setPadding(new Insets(50, 50, 50, 50));
+		
+		Label toLabel = new Label("To: ");
+		toLabel.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		toLabel.setPadding(new Insets(0, 49, 0, 0));
+		
+		TextField toArea = new TextField();
+		toArea.setMaxHeight(0);
+		toArea.setMinWidth(1000);
+		toArea.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		
+		toBox.getChildren().addAll(toLabel, toArea);
+		
+		Button friendshipButton = new Button("Add");
+		friendshipButton.setMinHeight(75);
+		friendshipButton.setMinWidth(200);
+		friendshipButton.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		
+		friendships.getChildren().addAll(friendsLabel, fromBox, toBox, friendshipButton);
 
 		// Adds content to scene
-		content.getChildren().addAll(add, remove);
+		Separator separator1 = new Separator();
+		content.getChildren().addAll(add, remove, separator1, friendships);
 		contentBox.getChildren().addAll(navBar, content);
 		root.getChildren().addAll(contentBox, infoVBox);
 		Scene friendScene = new Scene(root);
@@ -220,8 +301,8 @@ public class GUI extends Application {
 		// Friends list creation
 		Label listLabel = new Label("Friends");
 		ListView list = new ListView();
-//		for (User user : socialNetwork.getFriends(centralUser.username))
-//			list.getItems().add(user.username);
+		// for (User user : socialNetwork.getFriends(centralUser.username))
+		// list.getItems().add(user.username);
 		friendList.getChildren().addAll(listLabel, list);
 
 		// Current user creation
