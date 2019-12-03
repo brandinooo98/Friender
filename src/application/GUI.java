@@ -197,25 +197,25 @@ public class GUI extends Application {
 		HBox remove = new HBox();
 		VBox friendships = new VBox();
 
-		add.setPadding(new Insets(relativeWidth(250), relativeWidth(50), 0, relativeWidth(50)));
+		add.setPadding(new Insets(relativeHeight(250), relativeWidth(50), 0, relativeWidth(50)));
 		remove.setPadding(new Insets(relativeWidth(50), relativeWidth(50), relativeWidth(100), relativeWidth(50)));
 		friendships.setPadding(new Insets(relativeWidth(100), relativeWidth(50), relativeWidth(50), relativeWidth(50)));
 
 		// Add area creation
 		Label addLabel = new Label("Add Person: ");
-		addLabel.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		addLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 		addLabel.setPadding(new Insets(0, relativeWidth(78), 0,0));
 
 		TextField addArea = new TextField();
 		addArea.setMaxHeight(0);
 		addArea.setMinWidth(relativeWidth(800));
-		addArea.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		addArea.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 		
 		Button addButton = new Button("Create");
 		addButton.setOnAction(e -> addUser());
 		addButton.setMinHeight(relativeWidth(75));
 		addButton.setMinWidth(relativeWidth(200));
-		addButton.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		addButton.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 		
 		Region filler1 = new Region();
 		HBox.setHgrow(filler1, Priority.ALWAYS);
@@ -224,17 +224,17 @@ public class GUI extends Application {
 
 		// Remove area creation
 		Label removeLabel = new Label("Remove Person: ");
-		removeLabel.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		removeLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 
 		TextField removeArea = new TextField();
 		removeArea.setMaxHeight(0);
 		removeArea.setMinWidth(relativeWidth(800));
-		removeArea.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		removeArea.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 		
 		Button removeButton = new Button("Remove");
 		removeButton.setMinHeight(relativeWidth(75));
 		removeButton.setMinWidth(relativeWidth(200));
-		removeButton.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		removeButton.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 		
 		Region filler2 = new Region();
 		HBox.setHgrow(filler2, Priority.ALWAYS);
@@ -243,18 +243,18 @@ public class GUI extends Application {
 		
 		// Add friendship creation
 		Label friendsLabel = new Label("Add Friendships: ");
-		friendsLabel.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		friendsLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 		
 		HBox fromBox = new HBox();
 		fromBox.setPadding(new Insets(relativeWidth(50), relativeWidth(50), 0, relativeWidth(50)));
 		
 		Label fromLabel = new Label("From: ");
-		fromLabel.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		fromLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 		
 		TextField fromArea = new TextField();
 		fromArea.setMaxHeight(0);
 		fromArea.setMinWidth(relativeWidth(800));
-		fromArea.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		fromArea.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 		
 		fromBox.getChildren().addAll(fromLabel, fromArea);
 		
@@ -262,20 +262,20 @@ public class GUI extends Application {
 		toBox.setPadding(new Insets(relativeWidth(50), relativeWidth(50), relativeWidth(50), relativeWidth(50)));
 		
 		Label toLabel = new Label("To: ");
-		toLabel.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		toLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 		toLabel.setPadding(new Insets(0, relativeWidth(49), 0, 0));
 		
 		TextField toArea = new TextField();
 		toArea.setMaxHeight(0);
 		toArea.setMinWidth(relativeWidth(800));
-		toArea.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		toArea.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 		
 		toBox.getChildren().addAll(toLabel, toArea);
 		
 		Button friendshipButton = new Button("Add");
 		friendshipButton.setMinHeight(relativeWidth(75));
 		friendshipButton.setMinWidth(relativeWidth(200));
-		friendshipButton.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		friendshipButton.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 		
 		friendships.getChildren().addAll(friendsLabel, fromBox, toBox, friendshipButton);
 
@@ -361,11 +361,11 @@ public class GUI extends Application {
 
 		// Import/Export buttons
 		Button im = new Button("Import");
-		im.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		im.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 		im.setStyle("-fx-background-color: #ffffff;");
 		im.setPrefSize(relativeWidth(200), relativeHeight(100));
 		Button export = new Button("Export");
-		export.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		export.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 		export.setStyle("-fx-background-color: #ffffff;");
 		export.setPrefSize(relativeWidth(200), relativeHeight(100));
 		importExport.getChildren().addAll(im, export);
@@ -373,7 +373,7 @@ public class GUI extends Application {
 		// Set user and clear buttons and fields
 		Label setUserLabel = new Label("Set Main User:");
 		setUserLabel.setPadding(new Insets(0, 0, relativeWidth(19), relativeWidth(15)));
-		setUserLabel.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		setUserLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 		TextField setUserField = new TextField();
 		setUserField.setPrefSize(relativeWidth(100), relativeHeight(20));
 		setUserField.setMinHeight(relativeWidth(50));
@@ -382,7 +382,7 @@ public class GUI extends Application {
 
 		Button clear = new Button("Clear");
 		clear.setOnAction(e -> socialNetwork = new SocialNetwork());
-		clear.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		clear.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 		clear.setStyle("-fx-background-color: #ffffff;");
 		clear.setPrefSize(relativeWidth(200), relativeHeight(100));
 		networkControl.getChildren().addAll(setUser, clear);
