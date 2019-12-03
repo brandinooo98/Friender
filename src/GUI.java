@@ -160,14 +160,14 @@ public class GUI extends Application {
 
 		add.setPadding(new Insets(relativeHeight(100), relativeWidth(50), 0, relativeWidth(50)));
 		remove.setPadding(new Insets(relativeWidth(50), relativeWidth(50), relativeWidth(100), relativeWidth(50)));
-		friendships.setPadding(new Insets(relativeWidth(100), relativeWidth(50), relativeWidth(50), relativeWidth(50)));
+		friendships.setPadding(new Insets(relativeWidth(10), relativeWidth(50), relativeWidth(50), relativeWidth(50)));
 		addFriendships
 				.setPadding(new Insets(relativeWidth(100), relativeWidth(50), relativeWidth(50), relativeWidth(50)));
 		removeFriendships
 				.setPadding(new Insets(relativeWidth(100), relativeWidth(50), relativeWidth(50), relativeWidth(50)));
 
 		// Add area creation
-		Label addLabel = new Label("Add Person: ");
+		Label addLabel = new Label("Add User: ");
 		addLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 		addLabel.setPadding(new Insets(0, relativeWidth(78), 0, 0));
 
@@ -178,7 +178,16 @@ public class GUI extends Application {
 
 		Button addButton = new Button("Create");
 		addButton.setOnAction(e -> {
-			socialNetwork.addUser(addArea.getText());
+			if (socialNetwork.getAllUsers().contains(addArea.getText())) {
+				Alert a = new Alert(AlertType.WARNING);
+				a.setContentText("The user: " + addArea.getText() + " is already in the Social Network.");
+				a.show();
+			} else {
+				socialNetwork.addUser(addArea.getText());
+				Alert a = new Alert(AlertType.INFORMATION);
+				a.setContentText("The user: " + addArea.getText() + " has been added to the Social Network.");
+				a.show();
+			}
 			addArea.clear();
 		});
 
@@ -192,7 +201,7 @@ public class GUI extends Application {
 		add.getChildren().addAll(addLabel, addArea, filler1, addButton);
 
 		// Remove area creation
-		Label removeLabel = new Label("Remove Person: ");
+		Label removeLabel = new Label("Remove User: ");
 		removeLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 
 		TextField removeArea = new TextField();
@@ -204,6 +213,9 @@ public class GUI extends Application {
 		removeButton.setOnAction(e -> {
 			try {
 				socialNetwork.removeUser(removeArea.getText());
+				Alert a = new Alert(AlertType.INFORMATION);
+				a.setContentText("The user: " + removeArea.getText() + " has been removed from the Social Network.");
+				a.show();
 			} catch (UserNotFoundException e1) {
 				Alert a = new Alert(AlertType.ERROR);
 				a.setContentText("This user does not exist in the Social Network. No changes were made.");
