@@ -45,6 +45,12 @@ public class SocialNetwork implements SocialNetworkADT {
             graph.addVertex(new User(username));
         }
     }
+    
+    @Override
+	public void removeUser(String username) throws UserNotFoundException {
+    	User user = graph.getNode(username);
+		graph.removeVertex(user);
+	}
 
     /**
      * @param user
