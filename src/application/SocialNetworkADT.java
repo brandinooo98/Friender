@@ -1,8 +1,13 @@
 package application;
 
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ *
+ */
 public interface SocialNetworkADT {
 
 	/**
@@ -41,7 +46,13 @@ public interface SocialNetworkADT {
 	/**
 	 * @param username
 	 */
-	public void export(String username);
+	public void export(String username, ArrayList<String> commands) throws FileNotFoundException;
+
+	/**
+	 * @param fileName
+	 * @return
+	 */
+	public ArrayList<String> importCommands(String fileName) throws FileNotFoundException;
 
 	/**
 	 * @param username
@@ -55,7 +66,7 @@ public interface SocialNetworkADT {
 	 * @param user2
 	 * @return
 	 */
-	public List<User> getMutualFriends(String user1, String user2);
+	public List<User> getMutualFriends(String user1, String user2) throws UserNotFoundException;
 
 	/**
 	 *
