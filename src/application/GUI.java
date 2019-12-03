@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.util.List;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
+import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -17,6 +18,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Screen;
@@ -69,18 +72,26 @@ public class GUI extends Application {
 
 		// BUTTONS
 		Button view = new Button("View");
+		view.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		view.setStyle("-fx-border-color: #000000; -fx-background-color: #ffffff;");
 		view.setOnAction(e -> graphVisual());
 		view.setMinWidth(navBar.getMinWidth() * 0.25);
 		view.setMinHeight(navBar.getMinHeight());
 		Button edit = new Button("Edit");
+		edit.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		edit.setStyle("-fx-border-color: #000000; -fx-background-color: #ffffff;");
 		edit.setOnAction(e -> friendManagement());
 		edit.setMinWidth(navBar.getMinWidth() * 0.25);
 		edit.setMinHeight(navBar.getMinHeight());
 		Button friends = new Button("Friends");
+		friends.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		friends.setStyle("-fx-border-color: #000000; -fx-background-color: #ffffff;");
 		friends.setOnAction(e -> userInformation());
 		friends.setMinWidth(navBar.getMinWidth() * 0.25);
 		friends.setMinHeight(navBar.getMinHeight());
 		Button im = new Button("Import");
+		im.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		im.setStyle("-fx-border-color: #000000; -fx-background-color: #ffffff;");
 		im.setOnAction(e -> friendImportExport());
 		im.setMinWidth(navBar.getMinWidth() * 0.25);
 		im.setMinHeight(navBar.getMinHeight());
@@ -249,24 +260,42 @@ public class GUI extends Application {
 		// Initializes layout
 		root = new HBox();
 		contentBox = new VBox();
-		HBox content = new HBox();
+		VBox content = new VBox();
 		VBox importExport = new VBox();
 		VBox networkControl = new VBox();
-		HBox setUser = new HBox();
+		VBox setUser = new VBox();
 
 		// Import/Export buttons
 		Button im = new Button("Import");
+		im.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		im.setStyle("-fx-background-color: #ffffff;");
+		im.setPrefSize(200, 100);
 		Button export = new Button("Export");
+		export.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		export.setStyle("-fx-background-color: #ffffff;");
+		export.setPrefSize(200, 100);
 		importExport.getChildren().addAll(im, export);
 
 		// Set user and clear buttons and fields
 		Label setUserLabel = new Label("Set Main User:");
-		TextArea setUserArea = new TextArea();
-		setUser.getChildren().addAll(setUserLabel, setUserArea);
+		setUserLabel.setPadding(new Insets(0, 0, 19,15));
+		setUserLabel.setFont(Font.font("Arial", FontWeight.BOLD, 23));
+		TextField setUserField = new TextField();
+		setUserField.setPrefSize(100, 20);
+		setUserField.setMinHeight(50);
+		setUserField.setStyle("-fx-background-color: #ffffff;");
+		setUser.getChildren().addAll(setUserLabel, setUserField);
 
 		Button clear = new Button("Clear");
+		clear.setFont(Font.font("Arial", FontWeight.BOLD, 40));
+		clear.setStyle("-fx-background-color: #ffffff;");
+		clear.setPrefSize(200, 100);
 		networkControl.getChildren().addAll(setUser, clear);
 
+		content.setSpacing(150);
+		content.setPadding(new Insets(100, 610, 200, 590));
+		content.getChildren().addAll(setUser, im, export, clear);
+		content.setStyle("-fx-background-color: #3490D1;");
 		content.getChildren().addAll(importExport, networkControl);
 		contentBox.getChildren().addAll(navBar, content);
 		root.getChildren().addAll(contentBox, infoVBox);
