@@ -45,6 +45,12 @@ public class SocialNetwork implements SocialNetworkADT {
             graph.addVertex(new User(username));
         }
     }
+    
+    @Override
+	public void removeUser(String username) throws UserNotFoundException {
+    	User user = graph.getNode(username);
+		graph.removeVertex(user);
+	}
 
     /**
      * @param user
@@ -142,8 +148,8 @@ public class SocialNetwork implements SocialNetworkADT {
      */
     @Override
     public List<User> getMutualFriends(String username1, String username2) throws UserNotFoundException {
-        User user1 = graph.getNode(username1); // Stores user1
-        User user2 = graph.getNode(username2); // Stores user2
+        graph.getNode(username1); // Stores user1
+        graph.getNode(username2); // Stores user2
         List<User> mutualFriends = new ArrayList<>(); // List of mutual friends to be returned
 
         // Iterates through each user's friends list and checks for mutual friends

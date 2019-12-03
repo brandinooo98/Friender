@@ -22,6 +22,13 @@ public interface SocialNetworkADT {
 	 * @throws UserNotFoundException
 	 */
 	public void addUser(String username) throws UserNotFoundException;
+	
+	/**
+	 * 
+	 * @param username
+	 * @throws UserNotFoundException
+	 */
+	public void removeUser(String username) throws UserNotFoundException;
 
 	/**
 	 * @param user
