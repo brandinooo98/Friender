@@ -12,6 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -40,8 +41,6 @@ public class GUI extends Application {
 	private SocialNetwork socialNetwork;
 	private Stage window;
 	private User centralUser;
-	private HBox root;
-	private VBox infoVBox;
 	private VBox contentBox;
 	private HBox navBar;
 	private Rectangle2D primaryScreenBounds;
@@ -55,22 +54,14 @@ public class GUI extends Application {
 		primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 
 		// General instantiations
-		root = new HBox();
-		infoVBox = new VBox();
 		window = primaryStage;
 		socialNetwork = new SocialNetwork();
-
-		// Graph visualization
-		Canvas graph = new Canvas();
-		graph.setWidth(primaryScreenBounds.getWidth() * 0.75);
-		graph.setHeight(primaryScreenBounds.getHeight());
-		GraphicsContext gc = graph.getGraphicsContext2D();
 
 		// NAV BAR AND CANVAS
 		contentBox = new VBox();
 
 		navBar = new HBox();
-		navBar.setMinWidth(primaryScreenBounds.getWidth() * 0.75);
+		navBar.setMinWidth(primaryScreenBounds.getWidth());
 		navBar.setMinHeight(50);
 
 		// BUTTONS
@@ -101,33 +92,9 @@ public class GUI extends Application {
 		Button[] buttons = { view, edit, friends, im };
 
 		navBar.getChildren().addAll(buttons);
-		contentBox.getChildren().addAll(navBar, graph);
+		contentBox.getChildren().addAll(navBar);
 
-		// ERROR BOX AND STATUS BOX
-		infoVBox.setMinHeight(primaryScreenBounds.getHeight());
-
-		Text box1 = new Text(10, 50, "Status text");
-		Text box2 = new Text(10, 50, "Error text");
-		Label status = new Label("Status");
-		Label error = new Label("Error");
-
-		VBox statusBox = new VBox();
-		statusBox.setMinHeight(infoVBox.getMinHeight() * 0.5);
-
-		VBox errorBox = new VBox();
-		errorBox.setMinHeight(infoVBox.getMinHeight() * 0.5);
-
-		statusBox.getChildren().addAll(status, box1);
-		statusBox.setStyle("-fx-background-color: #336699;");
-		errorBox.getChildren().addAll(error, box2);
-		errorBox.setStyle("-fx-background-color: #123456;");
-
-		infoVBox.getChildren().addAll(statusBox, errorBox);
-		infoVBox.setMinWidth(primaryScreenBounds.getWidth() * 0.25);
-
-		root.getChildren().addAll(contentBox, infoVBox);
-
-		Scene mainScene = new Scene(root);
+		Scene mainScene = new Scene(contentBox);
 
 		// Makes window size of screen
 		window.setX(primaryScreenBounds.getMinX());
@@ -143,7 +110,6 @@ public class GUI extends Application {
 
 	public void graphVisual() {
 		// Initializes layout
-		root = new HBox();
 		contentBox = new VBox();
 
 		// Graph visualization
@@ -154,8 +120,8 @@ public class GUI extends Application {
 
 		// Adds content to scene
 		contentBox.getChildren().addAll(navBar, graph);
-		root.getChildren().addAll(contentBox, infoVBox);
-		Scene graphScene = new Scene(root);
+
+		Scene graphScene = new Scene(contentBox);
 
 		// Makes window size of screen
 		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
@@ -169,29 +135,22 @@ public class GUI extends Application {
 		window.setScene(graphScene);
 		window.show();
 	}
-	
+
 	private double relativeWidth(double in) {
-		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-		return primaryScreenBounds.getWidth() * (in/primaryScreenBounds.getWidth());
+		return primaryScreenBounds.getWidth() * (in / primaryScreenBounds.getWidth());
 	}
-	
+
 	private double relativeHeight(double in) {
-		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-		return primaryScreenBounds.getHeight() * (in/primaryScreenBounds.getHeight());
-	}
-	
-	private void addUser() {
-		
+		return primaryScreenBounds.getHeight() * (in / primaryScreenBounds.getHeight());
 	}
 
 	public void friendManagement() {
 		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 
 		// Initializes layout
-		root = new HBox();
 		contentBox = new VBox();
 		contentBox.setStyle("-fx-background-color: #3490D1;");
-		
+
 		VBox content = new VBox();
 		HBox add = new HBox();
 		HBox remove = new HBox();
@@ -204,19 +163,23 @@ public class GUI extends Application {
 		// Add area creation
 		Label addLabel = new Label("Add Person: ");
 		addLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
-		addLabel.setPadding(new Insets(0, relativeWidth(78), 0,0));
+		addLabel.setPadding(new Insets(0, relativeWidth(78), 0, 0));
 
 		TextField addArea = new TextField();
 		addArea.setMaxHeight(0);
 		addArea.setMinWidth(relativeWidth(500));
 		addArea.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
-		
+
 		Button addButton = new Button("Create");
-		addButton.setOnAction(e -> addUser());
+		addButton.setOnAction(e -> {
+			socialNetwork.addUser(addArea.getText());
+			addArea.clear();
+		});
+
 		addButton.setMinHeight(relativeWidth(75));
 		addButton.setMinWidth(relativeWidth(200));
 		addButton.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
-		
+
 		Region filler1 = new Region();
 		HBox.setHgrow(filler1, Priority.ALWAYS);
 
@@ -230,61 +193,71 @@ public class GUI extends Application {
 		removeArea.setMaxHeight(0);
 		removeArea.setMinWidth(relativeWidth(500));
 		removeArea.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
-		
+
 		Button removeButton = new Button("Remove");
+		removeButton.setOnAction(e -> {
+			try {
+				socialNetwork.removeUser(removeArea.getText());
+			} catch (UserNotFoundException e1) {
+				Alert a = new Alert(AlertType.ERROR);
+				a.setContentText("This user does not exist in the Social Network. No action was taken!");
+				a.show();
+			}
+			removeArea.clear();
+		});
+
 		removeButton.setMinHeight(relativeWidth(75));
 		removeButton.setMinWidth(relativeWidth(200));
 		removeButton.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
-		
+
 		Region filler2 = new Region();
 		HBox.setHgrow(filler2, Priority.ALWAYS);
 
 		remove.getChildren().addAll(removeLabel, removeArea, filler2, removeButton);
-		
+
 		// Add friendship creation
 		Label friendsLabel = new Label("Add Friendships: ");
 		friendsLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
-		
+
 		HBox fromBox = new HBox();
 		fromBox.setPadding(new Insets(relativeWidth(50), relativeWidth(50), 0, relativeWidth(50)));
-		
+
 		Label fromLabel = new Label("From: ");
 		fromLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
-		
+
 		TextField fromArea = new TextField();
 		fromArea.setMaxHeight(0);
 		fromArea.setMinWidth(relativeWidth(500));
 		fromArea.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
-		
+
 		fromBox.getChildren().addAll(fromLabel, fromArea);
-		
+
 		HBox toBox = new HBox();
 		toBox.setPadding(new Insets(relativeWidth(50), relativeWidth(50), relativeWidth(50), relativeWidth(50)));
-		
+
 		Label toLabel = new Label("To: ");
 		toLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 		toLabel.setPadding(new Insets(0, relativeWidth(49), 0, 0));
-		
+
 		TextField toArea = new TextField();
 		toArea.setMaxHeight(0);
 		toArea.setMinWidth(relativeWidth(500));
 		toArea.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
-		
+
 		toBox.getChildren().addAll(toLabel, toArea);
-		
+
 		Button friendshipButton = new Button("Add");
 		friendshipButton.setMinHeight(relativeWidth(75));
 		friendshipButton.setMinWidth(relativeWidth(200));
 		friendshipButton.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
-		
+
 		friendships.getChildren().addAll(friendsLabel, fromBox, toBox, friendshipButton);
 
 		// Adds content to scene
 		Separator separator1 = new Separator();
 		content.getChildren().addAll(add, remove, separator1, friendships);
 		contentBox.getChildren().addAll(navBar, content);
-		root.getChildren().addAll(contentBox, infoVBox);
-		Scene friendScene = new Scene(root);
+		Scene friendScene = new Scene(contentBox);
 
 		// Makes window size of screen
 		window.setX(primaryScreenBounds.getMinX());
@@ -302,7 +275,6 @@ public class GUI extends Application {
 	 */
 	public void userInformation() {
 		// Initializes layout
-		root = new HBox();
 		contentBox = new VBox();
 		HBox content = new HBox();
 		VBox friendList = new VBox();
@@ -330,8 +302,7 @@ public class GUI extends Application {
 		// Adds content to the scene
 		content.getChildren().addAll(friendList, friendSearch);
 		contentBox.getChildren().addAll(navBar, content);
-		root.getChildren().addAll(contentBox, infoVBox);
-		Scene userScene = new Scene(root);
+		Scene userScene = new Scene(contentBox);
 
 		// Makes window size of screen
 		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
@@ -349,10 +320,7 @@ public class GUI extends Application {
 	/**
 	 */
 	public void friendImportExport() {
-		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-		
 		// Initializes layout
-		root = new HBox();
 		contentBox = new VBox();
 		VBox content = new VBox();
 		VBox importExport = new VBox();
@@ -387,7 +355,6 @@ public class GUI extends Application {
 		clear.setPrefSize(relativeWidth(200), relativeHeight(100));
 		networkControl.getChildren().addAll(setUser, clear);
 
-
 		// Adds content to the scene
 		content.setSpacing(relativeWidth(150));
 		content.setPadding(new Insets(relativeWidth(100), relativeWidth(610), relativeWidth(200), relativeWidth(590)));
@@ -395,8 +362,7 @@ public class GUI extends Application {
 		content.setStyle("-fx-background-color: #3490D1;");
 		content.getChildren().addAll(importExport, networkControl);
 		contentBox.getChildren().addAll(navBar, content);
-		root.getChildren().addAll(contentBox, infoVBox);
-		Scene commandScene = new Scene(root);
+		Scene commandScene = new Scene(contentBox);
 
 		// Makes window size of screen
 		window.setX(primaryScreenBounds.getMinX());
