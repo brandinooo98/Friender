@@ -14,12 +14,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -60,12 +55,6 @@ public class GUI extends Application {
 		window = primaryStage;
 		socialNetwork = new SocialNetwork();
 
-		// Graph visualization
-		Canvas graph = new Canvas();
-		graph.setWidth(primaryScreenBounds.getWidth() * 0.75);
-		graph.setHeight(primaryScreenBounds.getHeight());
-		GraphicsContext gc = graph.getGraphicsContext2D();
-
 		// NAV BAR AND CANVAS
 		contentBox = new VBox();
 
@@ -101,7 +90,6 @@ public class GUI extends Application {
 		Button[] buttons = { view, edit, friends, im };
 
 		navBar.getChildren().addAll(buttons);
-		contentBox.getChildren().addAll(navBar, graph);
 
 		// ERROR BOX AND STATUS BOX
 		infoVBox.setMinHeight(primaryScreenBounds.getHeight());
@@ -125,20 +113,7 @@ public class GUI extends Application {
 		infoVBox.getChildren().addAll(statusBox, errorBox);
 		infoVBox.setMinWidth(primaryScreenBounds.getWidth() * 0.25);
 
-		root.getChildren().addAll(contentBox, infoVBox);
-
-		Scene mainScene = new Scene(root);
-
-		// Makes window size of screen
-		window.setX(primaryScreenBounds.getMinX());
-		window.setY(primaryScreenBounds.getMinY());
-		window.setWidth(primaryScreenBounds.getWidth());
-		window.setHeight(primaryScreenBounds.getHeight());
-
-		// Add the stuff and set the primary stage
-		window.setTitle(APP_TITLE);
-		window.setScene(mainScene);
-		window.show();
+		friendImportExport(); // Startup Screen
 	}
 
 	public void graphVisual() {
@@ -171,12 +146,12 @@ public class GUI extends Application {
 	}
 	
 	private double relativeWidth(double in) {
-		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+		primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 		return primaryScreenBounds.getWidth() * (in/primaryScreenBounds.getWidth());
 	}
 	
 	private double relativeHeight(double in) {
-		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+		primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 		return primaryScreenBounds.getHeight() * (in/primaryScreenBounds.getHeight());
 	}
 	
@@ -185,7 +160,7 @@ public class GUI extends Application {
 	}
 
 	public void friendManagement() {
-		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+		primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 
 		// Initializes layout
 		root = new HBox();
@@ -349,8 +324,6 @@ public class GUI extends Application {
 	/**
 	 */
 	public void friendImportExport() {
-		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-		
 		// Initializes layout
 		root = new HBox();
 		contentBox = new VBox();
@@ -372,13 +345,19 @@ public class GUI extends Application {
 
 		// Set user and clear buttons and fields
 		Label setUserLabel = new Label("Set Main User:");
-		setUserLabel.setPadding(new Insets(0, 0, relativeWidth(19), relativeWidth(15)));
+		setUserLabel.setPadding(new Insets(0, 0, 0, relativeWidth(18)));
 		setUserLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(20)));
 		TextField setUserField = new TextField();
 		setUserField.setPrefSize(relativeWidth(100), relativeHeight(20));
 		setUserField.setMinHeight(relativeWidth(50));
 		setUserField.setStyle("-fx-background-color: #ffffff;");
-		setUser.getChildren().addAll(setUserLabel, setUserField);
+		Button set = new Button("Set User");
+		set.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(20)));
+		set.setStyle("-fx-background-color: #ffffff;");
+		Pane setPane = new Pane(set);
+		setPane.setPadding(new Insets(relativeWidth(19), 0, 0, relativeWidth(15)));
+		setUser.getChildren().addAll(setUserLabel, setUserField, setPane);
+		setUser.setSpacing(relativeWidth(19));
 
 		Button clear = new Button("Clear");
 		clear.setOnAction(e -> socialNetwork = new SocialNetwork());
