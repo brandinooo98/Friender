@@ -307,12 +307,12 @@ public class GUI extends Application {
 
 		// Current user creation
 		Label userLabel = new Label("Current User: ");
-		Text userText = new Text("username"); // TODO
+		Text userText = new Text("username"); // TODO This should be centralUser.username
 		currentUserArea.getChildren().addAll(userLabel, userText);
 
 		// Friend search creation
 		Label searchLabel = new Label("Find Friend:");
-		TextArea searchBar = new TextArea();
+		TextField searchBar = new TextField();
 		Button searchButton = new Button("Search");
 		friendSearch.getChildren().addAll(currentUserArea, searchLabel, searchBar, searchButton);
 
@@ -368,11 +368,13 @@ public class GUI extends Application {
 		setUser.getChildren().addAll(setUserLabel, setUserField);
 
 		Button clear = new Button("Clear");
+		clear.setOnAction(e -> socialNetwork = new SocialNetwork());
 		clear.setFont(Font.font("Arial", FontWeight.BOLD, 40));
 		clear.setStyle("-fx-background-color: #ffffff;");
 		clear.setPrefSize(200, 100);
 		networkControl.getChildren().addAll(setUser, clear);
 
+		// Adds content to the scene
 		content.setSpacing(150);
 		content.setPadding(new Insets(100, 610, 200, 590));
 		content.getChildren().addAll(setUser, im, export, clear);

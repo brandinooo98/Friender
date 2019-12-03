@@ -1,5 +1,8 @@
 package application;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.*;
 
 /**
@@ -85,11 +88,40 @@ public class SocialNetwork implements SocialNetworkADT {
 	}
 
 	/**
-	 * @param username
+	 * @param fileName
+	 * @param commands
+	 * @throws FileNotFoundException
 	 */
 	@Override
-	public void export(String username) {
+	public void export(String fileName, ArrayList<String> commands) throws FileNotFoundException {
+		File file = new File(fileName); // Creates instance of given file
+		PrintWriter printWriter = new PrintWriter(file);
+		// Prints all commands onto file
+		for(String command : commands)
+			printWriter.println(command);
+		printWriter.close();
+	}
 
+	/**
+	 * @param fileName
+	 * @return
+	 * @throws FileNotFoundException
+	 */
+	public ArrayList<String> importCommands(String fileName) throws FileNotFoundException {
+		File file = new File(fileName); // Creates instance of given file
+		Scanner input = new Scanner(file);
+		ArrayList<String> commands = new ArrayList<>(); // Stores commands to be read
+		// If no commands
+		if (!input.hasNext()){
+			return commands;
+		} else {
+			// While text is still on the file, adds to commands ArrayList
+			while (input.hasNext()){
+				String command = input.nextLine();
+				commands.add(command);
+			}
+			return commands;
+		}
 	}
 
 	/**
@@ -106,13 +138,24 @@ public class SocialNetwork implements SocialNetworkADT {
 	}
 
 	/**
-	 * @param user1
-	 * @param user2
+	 * @param username1
+	 * @param username2
 	 * @return
 	 */
 	@Override
-	public List<User> getMutualFriends(String user1, String user2) {
-		return null;
+	public List<User> getMutualFriends(String username1, String username2) throws UserNotFoundException {
+		User user1 = graph.getNode(username1); // Stores user1
+		User user2 = graph.getNode(username2); // Stores user2
+		List<User> mutualFriends = new ArrayList<>(); // List of mutual friends to be returned
+
+		// Iterates through each user's friends list and checks for mutual friends
+		for(User user1Friend : getFriends(username1)){
+			for (User user2Friend : getFriends(username2)){
+				if(!mutualFriends.contains(user1Friend) && user1Friend.equals(user2Friend))
+					mutualFriends.add(user1Friend);
+			}
+		}
+		return mutualFriends;
 	}
 
 	/**
