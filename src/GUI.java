@@ -347,33 +347,50 @@ public class GUI extends Application {
 	public void userInformation() {
 		// Initializes layout
 		contentBox = new VBox();
-		HBox content = new HBox();
-		VBox friendList = new VBox();
-		VBox friendSearch = new VBox();
-		HBox currentUserArea = new HBox();
+		contentBox.setStyle("-fx-background-color: #3490D1;");
+		HBox content = new HBox(20);
+		VBox friendList = new VBox(20);
+		VBox friendSearch = new VBox(20);
+		HBox currentUserArea = new HBox(20);
 
 		// Friends list creation
 		Label listLabel = new Label("Friends");
+		listLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
+		listLabel.setPadding(new Insets(0, 0, 0, relativeWidth(170)));
 		ListView list = new ListView();
+		list.setMinWidth(relativeWidth(500));
 		// for (User user : socialNetwork.getFriends(centralUser.username))
 		// list.getItems().add(user.username);
 		friendList.getChildren().addAll(listLabel, list);
+		friendList.setPadding(new Insets(relativeHeight(200), 0, 0, relativeWidth(600)));
+		// TODO FIX PADDING?
 
 		// Current user creation
 		Label userLabel = new Label("Current User: ");
+		userLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 		Text userText = new Text("username"); // TODO This should be centralUser.username
+		userText.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 		currentUserArea.getChildren().addAll(userLabel, userText);
+		// TODO FIX PADDING?
 
 		// Friend search creation
 		Label searchLabel = new Label("Find Friend:");
+		searchLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
+		searchLabel.setPadding(new Insets(relativeHeight(200), 0, 0, 0));
 		TextField searchBar = new TextField();
+		searchBar.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(30)));
 		Button searchButton = new Button("Search");
+		searchButton.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(30)));
 		friendSearch.getChildren().addAll(currentUserArea, searchLabel, searchBar, searchButton);
+		friendSearch.setPadding(new Insets(relativeHeight(200), 0, 0, relativeWidth(200)));
+		// TODO PADDING
 
 		// Adds content to the scene
-		content.getChildren().addAll(friendList, friendSearch);
+		content.getChildren().addAll(friendSearch, friendList);
 		contentBox.getChildren().addAll(navBar, content);
+		// TODO COLOR / PADDING
 		Scene userScene = new Scene(contentBox);
+		
 
 		// Makes window size of screen
 		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
