@@ -2,7 +2,11 @@ package application;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -35,12 +39,13 @@ public class GUI extends Application {
 	private static final String APP_TITLE = "Friender";
 	private SocialNetwork socialNetwork;
 	private Stage window;
-	private User centralUser;
+	private String centralUser;
 	private VBox contentBox;
 	private HBox navBar;
 	private Rectangle2D primaryScreenBounds;
+	private ArrayList<String> commands;
 
-	/**
+    /**
 	 * @param primaryStage
 	 * @throws Exception
 	 */
@@ -322,12 +327,42 @@ public class GUI extends Application {
 		VBox networkControl = new VBox();
 		VBox setUser = new VBox();
 
-		// Import/Export buttons
+		// Import button
 		Button im = new Button("Import");
+        im.setOnAction(e -> {
+                    TextInputDialog dialog = new TextInputDialog();
+                    dialog.setTitle("Command Import");
+                    dialog.setHeaderText("Insert the filename of your command file");
+                    dialog.setContentText("Please enter file name:");
+                    Optional<String> result = dialog.showAndWait();
+                    result.ifPresent(filename -> {
+                        try {
+                            commands = socialNetwork.importCommands(filename);
+                        } catch (FileNotFoundException ex) {
+                            ex.printStackTrace();
+                        }
+                    });
+                });
 		im.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(20)));
 		im.setStyle("-fx-background-color: #ffffff;");
 		im.setPrefSize(relativeWidth(200), relativeHeight(100));
+
+		// Export button
 		Button export = new Button("Export");
+        export.setOnAction(e -> {
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.setTitle("Command Export");
+            dialog.setHeaderText("Insert the filename of the log file you wish to print commands to");
+            dialog.setContentText("Please enter file name:");
+            Optional<String> result = dialog.showAndWait();
+            result.ifPresent(filename -> {
+                try {
+                    socialNetwork.export(filename, commands);
+                } catch (FileNotFoundException ex) {
+                    ex.printStackTrace();
+                }
+            });
+        });
 		export.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(20)));
 		export.setStyle("-fx-background-color: #ffffff;");
 		export.setPrefSize(relativeWidth(200), relativeHeight(100));
@@ -342,6 +377,32 @@ public class GUI extends Application {
 		setUserField.setMinHeight(relativeWidth(50));
 		setUserField.setStyle("-fx-background-color: #ffffff;");
 		Button set = new Button("Set User");
+		set.setOnAction(e -> {
+			if (socialNetwork.getAllUsers().contains(setUserField.getText())){
+				centralUser = setUserField.getText();
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setTitle("Confirmation");
+				alert.setHeaderText(null);
+				alert.setContentText(centralUser + "is now the central user!");
+				alert.showAndWait();
+			} else {
+				Alert alert = new Alert(AlertType.CONFIRMATION);
+				alert.setTitle("Confirmation");
+				alert.setHeaderText("Username was not found");
+				alert.setContentText("Would you like to create a user with this username?");
+				Optional<ButtonType> result = alert.showAndWait();
+				if (result.get() == ButtonType.OK){
+					socialNetwork.addUser(setUserField.getText());
+					centralUser = setUserField.getText();
+					Alert alert1 = new Alert(AlertType.INFORMATION);
+					alert1.setTitle("Confirmation");
+					alert1.setHeaderText(null);
+					alert1.setContentText(centralUser + "is now the central user!");
+					alert1.showAndWait();
+				}
+			}
+			setUserField.clear();
+		});
 		set.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(20)));
 		set.setStyle("-fx-background-color: #ffffff;");
 		Pane setPane = new Pane(set);
@@ -350,7 +411,16 @@ public class GUI extends Application {
 		setUser.setSpacing(relativeWidth(19));
 
 		Button clear = new Button("Clear");
-		clear.setOnAction(e -> socialNetwork = new SocialNetwork());
+		clear.setOnAction(e -> {
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.setTitle("Clear Network Confirmation");
+			alert.setHeaderText("Clear Social Network");
+			alert.setContentText("Are you sure you want to clear the Social Network?");
+
+			Optional<ButtonType> result = alert.showAndWait();
+			if (result.get() == ButtonType.OK)
+				socialNetwork = new SocialNetwork();
+		});
 		clear.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(20)));
 		clear.setStyle("-fx-background-color: #ffffff;");
 		clear.setPrefSize(relativeWidth(200), relativeHeight(100));
