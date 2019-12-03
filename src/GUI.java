@@ -92,20 +92,7 @@ public class GUI extends Application {
 		Button[] buttons = { view, edit, friends, im };
 
 		navBar.getChildren().addAll(buttons);
-		contentBox.getChildren().addAll(navBar);
-
-		Scene mainScene = new Scene(contentBox);
-
-		// Makes window size of screen
-		window.setX(primaryScreenBounds.getMinX());
-		window.setY(primaryScreenBounds.getMinY());
-		window.setWidth(primaryScreenBounds.getWidth());
-		window.setHeight(primaryScreenBounds.getHeight());
-
-		// Add the stuff and set the primary stage
-		window.setTitle(APP_TITLE);
-		window.setScene(mainScene);
-		window.show();
+		friendImportExport();
 	}
 
 	public void graphVisual() {
