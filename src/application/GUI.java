@@ -15,12 +15,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -145,7 +140,7 @@ public class GUI extends Application {
 	}
 
 	public void friendManagement() {
-		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+		primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 
 		// Initializes layout
 		contentBox = new VBox();
@@ -340,13 +335,19 @@ public class GUI extends Application {
 
 		// Set user and clear buttons and fields
 		Label setUserLabel = new Label("Set Main User:");
-		setUserLabel.setPadding(new Insets(0, 0, relativeWidth(19), relativeWidth(15)));
+		setUserLabel.setPadding(new Insets(0, 0, 0, relativeWidth(18)));
 		setUserLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(20)));
 		TextField setUserField = new TextField();
 		setUserField.setPrefSize(relativeWidth(100), relativeHeight(20));
 		setUserField.setMinHeight(relativeWidth(50));
 		setUserField.setStyle("-fx-background-color: #ffffff;");
-		setUser.getChildren().addAll(setUserLabel, setUserField);
+		Button set = new Button("Set User");
+		set.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(20)));
+		set.setStyle("-fx-background-color: #ffffff;");
+		Pane setPane = new Pane(set);
+		setPane.setPadding(new Insets(relativeWidth(19), 0, 0, relativeWidth(15)));
+		setUser.getChildren().addAll(setUserLabel, setUserField, setPane);
+		setUser.setSpacing(relativeWidth(19));
 
 		Button clear = new Button("Clear");
 		clear.setOnAction(e -> socialNetwork = new SocialNetwork());

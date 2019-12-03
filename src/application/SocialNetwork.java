@@ -148,8 +148,6 @@ public class SocialNetwork implements SocialNetworkADT {
      */
     @Override
     public List<User> getMutualFriends(String username1, String username2) throws UserNotFoundException {
-        graph.getNode(username1); // Stores user1
-        graph.getNode(username2); // Stores user2
         List<User> mutualFriends = new ArrayList<>(); // List of mutual friends to be returned
 
         // Iterates through each user's friends list and checks for mutual friends
