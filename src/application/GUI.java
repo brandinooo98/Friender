@@ -6,6 +6,7 @@ import java.util.List;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
@@ -149,11 +150,15 @@ public class GUI extends Application {
 		VBox content = new VBox();
 		HBox add = new HBox();
 		HBox remove = new HBox();
-		VBox friendships = new VBox();
+		BorderPane friendships = new BorderPane();
+		VBox addFriendships = new VBox();
+		VBox removeFriendships = new VBox();
 
 		add.setPadding(new Insets(relativeHeight(100), relativeWidth(50), 0, relativeWidth(50)));
 		remove.setPadding(new Insets(relativeWidth(50), relativeWidth(50), relativeWidth(100), relativeWidth(50)));
 		friendships.setPadding(new Insets(relativeWidth(100), relativeWidth(50), relativeWidth(50), relativeWidth(50)));
+		addFriendships.setPadding(new Insets(relativeWidth(100), relativeWidth(50), relativeWidth(50), relativeWidth(50)));
+		removeFriendships.setPadding(new Insets(relativeWidth(100), relativeWidth(50), relativeWidth(50), relativeWidth(50)));
 
 		// Add area creation
 		Label addLabel = new Label("Add Person: ");
@@ -195,7 +200,7 @@ public class GUI extends Application {
 				socialNetwork.removeUser(removeArea.getText());
 			} catch (UserNotFoundException e1) {
 				Alert a = new Alert(AlertType.ERROR);
-				a.setContentText("This user does not exist in the Social Network. No action was taken!");
+				a.setContentText("This user does not exist in the Social Network. No changes were made.");
 				a.show();
 			}
 			removeArea.clear();
@@ -242,15 +247,81 @@ public class GUI extends Application {
 		toBox.getChildren().addAll(toLabel, toArea);
 
 		Button friendshipButton = new Button("Add");
+		
+		friendshipButton.setOnAction(e -> {
+			socialNetwork.addFriend(toArea.getText(), fromArea.getText());
+			toArea.clear();
+			fromArea.clear();
+		});
+		
 		friendshipButton.setMinHeight(relativeWidth(75));
 		friendshipButton.setMinWidth(relativeWidth(200));
 		friendshipButton.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 
-		friendships.getChildren().addAll(friendsLabel, fromBox, toBox, friendshipButton);
+		addFriendships.getChildren().addAll(friendsLabel, fromBox, toBox, friendshipButton);
+		
+		// Remove friendship creation
+		Label friendsLabel2 = new Label("Remove Friendships: ");
+		friendsLabel2.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 
-		// Adds content to scene
+		HBox fromBox2 = new HBox();
+		fromBox2.setPadding(new Insets(relativeWidth(50), relativeWidth(50), 0, relativeWidth(50)));
+
+		Label fromLabel2 = new Label("From: ");
+		fromLabel2.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
+
+		TextField fromArea2 = new TextField();
+		fromArea2.setMaxHeight(0);
+		fromArea2.setMinWidth(relativeWidth(500));
+		fromArea2.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
+
+		fromBox2.getChildren().addAll(fromLabel2, fromArea2);
+
+		HBox toBox2 = new HBox();
+		toBox2.setPadding(new Insets(relativeWidth(50), relativeWidth(50), relativeWidth(50), relativeWidth(50)));
+
+		Label toLabel2 = new Label("To: ");
+		toLabel2.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
+		toLabel2.setPadding(new Insets(0, relativeWidth(49), 0, 0));
+
+		TextField toArea2 = new TextField();
+		toArea2.setMaxHeight(0);
+		toArea2.setMinWidth(relativeWidth(500));
+		toArea2.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
+
+		toBox2.getChildren().addAll(toLabel2, toArea2);
+
+		Button friendshipButton2 = new Button("Remove");
+		
+		friendshipButton2.setOnAction(e -> {
+			try {
+				socialNetwork.removeFriend(toArea2.getText(), fromArea2.getText());
+			} catch (UserNotFoundException e1) {
+				Alert a = new Alert(AlertType.ERROR);
+				a.setContentText("One of the users was invalid. No changes were made.");
+				a.show();
+			}
+			toArea2.clear();
+			fromArea2.clear();
+		});
+		
+		friendshipButton2.setMinHeight(relativeWidth(75));
+		friendshipButton2.setMinWidth(relativeWidth(200));
+		friendshipButton2.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
+
+		removeFriendships.getChildren().addAll(friendsLabel2, fromBox2, toBox2, friendshipButton2);
+		
+		friendships.setLeft(addFriendships);
+		
 		Separator separator1 = new Separator();
-		content.getChildren().addAll(add, remove, separator1, friendships);
+		separator1.setOrientation(Orientation.VERTICAL);
+		friendships.setCenter(separator1);
+		
+		friendships.setRight(removeFriendships);
+		
+		// Adds content to scene
+		Separator separator2 = new Separator();
+		content.getChildren().addAll(add, remove, separator2, friendships);
 		contentBox.getChildren().addAll(navBar, content);
 		Scene friendScene = new Scene(contentBox);
 
