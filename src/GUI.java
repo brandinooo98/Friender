@@ -1,4 +1,3 @@
-package application;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -46,7 +45,7 @@ public class GUI extends Application {
 	private Rectangle2D primaryScreenBounds;
 	private ArrayList<String> commands;
 
-    /**
+	/**
 	 * @param primaryStage
 	 * @throws Exception
 	 */
@@ -162,8 +161,10 @@ public class GUI extends Application {
 		add.setPadding(new Insets(relativeHeight(100), relativeWidth(50), 0, relativeWidth(50)));
 		remove.setPadding(new Insets(relativeWidth(50), relativeWidth(50), relativeWidth(100), relativeWidth(50)));
 		friendships.setPadding(new Insets(relativeWidth(100), relativeWidth(50), relativeWidth(50), relativeWidth(50)));
-		addFriendships.setPadding(new Insets(relativeWidth(100), relativeWidth(50), relativeWidth(50), relativeWidth(50)));
-		removeFriendships.setPadding(new Insets(relativeWidth(100), relativeWidth(50), relativeWidth(50), relativeWidth(50)));
+		addFriendships
+				.setPadding(new Insets(relativeWidth(100), relativeWidth(50), relativeWidth(50), relativeWidth(50)));
+		removeFriendships
+				.setPadding(new Insets(relativeWidth(100), relativeWidth(50), relativeWidth(50), relativeWidth(50)));
 
 		// Add area creation
 		Label addLabel = new Label("Add Person: ");
@@ -252,19 +253,19 @@ public class GUI extends Application {
 		toBox.getChildren().addAll(toLabel, toArea);
 
 		Button friendshipButton = new Button("Add");
-		
+
 		friendshipButton.setOnAction(e -> {
 			socialNetwork.addFriend(toArea.getText(), fromArea.getText());
 			toArea.clear();
 			fromArea.clear();
 		});
-		
+
 		friendshipButton.setMinHeight(relativeWidth(75));
 		friendshipButton.setMinWidth(relativeWidth(200));
 		friendshipButton.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 
 		addFriendships.getChildren().addAll(friendsLabel, fromBox, toBox, friendshipButton);
-		
+
 		// Remove friendship creation
 		Label friendsLabel2 = new Label("Remove Friendships: ");
 		friendsLabel2.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
@@ -297,7 +298,7 @@ public class GUI extends Application {
 		toBox2.getChildren().addAll(toLabel2, toArea2);
 
 		Button friendshipButton2 = new Button("Remove");
-		
+
 		friendshipButton2.setOnAction(e -> {
 			try {
 				socialNetwork.removeFriend(toArea2.getText(), fromArea2.getText());
@@ -309,21 +310,21 @@ public class GUI extends Application {
 			toArea2.clear();
 			fromArea2.clear();
 		});
-		
+
 		friendshipButton2.setMinHeight(relativeWidth(75));
 		friendshipButton2.setMinWidth(relativeWidth(200));
 		friendshipButton2.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 
 		removeFriendships.getChildren().addAll(friendsLabel2, fromBox2, toBox2, friendshipButton2);
-		
+
 		friendships.setLeft(addFriendships);
-		
+
 		Separator separator1 = new Separator();
 		separator1.setOrientation(Orientation.VERTICAL);
 		friendships.setCenter(separator1);
-		
+
 		friendships.setRight(removeFriendships);
-		
+
 		// Adds content to scene
 		Separator separator2 = new Separator();
 		content.getChildren().addAll(add, remove, separator2, friendships);
@@ -400,40 +401,40 @@ public class GUI extends Application {
 
 		// Import button
 		Button im = new Button("Import");
-        im.setOnAction(e -> {
-                    TextInputDialog dialog = new TextInputDialog();
-                    dialog.setTitle("Command Import");
-                    dialog.setHeaderText("Insert the filename of your command file");
-                    dialog.setContentText("Please enter file name:");
-                    Optional<String> result = dialog.showAndWait();
-                    result.ifPresent(filename -> {
-                        try {
-                            commands = socialNetwork.importCommands(filename);
-                        } catch (FileNotFoundException ex) {
-                            ex.printStackTrace();
-                        }
-                    });
-                });
+		im.setOnAction(e -> {
+			TextInputDialog dialog = new TextInputDialog();
+			dialog.setTitle("Command Import");
+			dialog.setHeaderText("Insert the filename of your command file");
+			dialog.setContentText("Please enter file name:");
+			Optional<String> result = dialog.showAndWait();
+			result.ifPresent(filename -> {
+				try {
+					commands = socialNetwork.importCommands(filename);
+				} catch (FileNotFoundException ex) {
+					ex.printStackTrace();
+				}
+			});
+		});
 		im.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(20)));
 		im.setStyle("-fx-background-color: #ffffff;");
 		im.setPrefSize(relativeWidth(200), relativeHeight(100));
 
 		// Export button
 		Button export = new Button("Export");
-        export.setOnAction(e -> {
-            TextInputDialog dialog = new TextInputDialog();
-            dialog.setTitle("Command Export");
-            dialog.setHeaderText("Insert the filename of the log file you wish to print commands to");
-            dialog.setContentText("Please enter file name:");
-            Optional<String> result = dialog.showAndWait();
-            result.ifPresent(filename -> {
-                try {
-                    socialNetwork.export(filename, commands);
-                } catch (FileNotFoundException ex) {
-                    ex.printStackTrace();
-                }
-            });
-        });
+		export.setOnAction(e -> {
+			TextInputDialog dialog = new TextInputDialog();
+			dialog.setTitle("Command Export");
+			dialog.setHeaderText("Insert the filename of the log file you wish to print commands to");
+			dialog.setContentText("Please enter file name:");
+			Optional<String> result = dialog.showAndWait();
+			result.ifPresent(filename -> {
+				try {
+					socialNetwork.export(filename, commands);
+				} catch (FileNotFoundException ex) {
+					ex.printStackTrace();
+				}
+			});
+		});
 		export.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(20)));
 		export.setStyle("-fx-background-color: #ffffff;");
 		export.setPrefSize(relativeWidth(200), relativeHeight(100));
@@ -449,7 +450,7 @@ public class GUI extends Application {
 		setUserField.setStyle("-fx-background-color: #ffffff;");
 		Button set = new Button("Set User");
 		set.setOnAction(e -> {
-			if (socialNetwork.getAllUsers().contains(setUserField.getText())){
+			if (socialNetwork.getAllUsers().contains(setUserField.getText())) {
 				centralUser = setUserField.getText();
 				Alert alert = new Alert(AlertType.INFORMATION);
 				alert.setTitle("Confirmation");
@@ -462,7 +463,7 @@ public class GUI extends Application {
 				alert.setHeaderText("Username was not found");
 				alert.setContentText("Would you like to create a user with this username?");
 				Optional<ButtonType> result = alert.showAndWait();
-				if (result.get() == ButtonType.OK){
+				if (result.get() == ButtonType.OK) {
 					socialNetwork.addUser(setUserField.getText());
 					centralUser = setUserField.getText();
 					Alert alert1 = new Alert(AlertType.INFORMATION);

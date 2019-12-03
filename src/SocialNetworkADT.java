@@ -1,4 +1,3 @@
-package application;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -22,7 +21,7 @@ public interface SocialNetworkADT {
 	 * @throws UserNotFoundException
 	 */
 	public void addUser(String username) throws UserNotFoundException;
-	
+
 	/**
 	 * 
 	 * @param username

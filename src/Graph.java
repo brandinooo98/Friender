@@ -1,4 +1,3 @@
-package application;
 
 import java.util.Hashtable;
 import java.util.LinkedList;
@@ -58,8 +57,7 @@ public class Graph implements GraphADT {
 	public void addEdge(User vertex1, User vertex2) {
 		if (vertex1 != null && vertex2 != null) {
 			if (graph.containsKey(vertex1) && graph.containsKey(vertex2)) {
-				if (!graph.get(vertex1).contains(vertex2)
-						&& !graph.get(vertex2).contains(vertex1)) {
+				if (!graph.get(vertex1).contains(vertex2) && !graph.get(vertex2).contains(vertex1)) {
 					graph.get(vertex1).add(vertex2);
 					graph.get(vertex2).add(vertex1);
 				}
@@ -71,8 +69,7 @@ public class Graph implements GraphADT {
 	public void removeEdge(User vertex1, User vertex2) {
 		if (vertex1 != null && vertex2 != null) {
 			if (graph.containsKey(vertex1) && graph.containsKey(vertex2)) {
-				if (graph.get(vertex1).contains(vertex2)
-						&& graph.get(vertex2).contains(vertex1)) {
+				if (graph.get(vertex1).contains(vertex2) && graph.get(vertex2).contains(vertex1)) {
 					graph.get(vertex1).remove(vertex2);
 					graph.get(vertex2).remove(vertex1);
 				}
