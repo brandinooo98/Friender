@@ -24,6 +24,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.*;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -44,6 +45,7 @@ public class GUI extends Application {
 	private HBox navBar;
 	private Rectangle2D primaryScreenBounds;
 	private ArrayList<String> commands;
+	private Canvas graph;
 
 	/**
 	 * @param primaryStage
@@ -117,7 +119,7 @@ public class GUI extends Application {
 			int distSum = distx + disty;
 			int sqrtDist = (int)Math.sqrt(distSum);
 			
-			if (sqrtDist <= 50) {
+			if (sqrtDist <= 70) {
 				return false;
 			}
 		}
@@ -127,8 +129,8 @@ public class GUI extends Application {
 	
 	private int[] generateCoords(ArrayList<CircleData> circles) {
 		Random rand = new Random();
-		int circlex = rand.nextInt((int)primaryScreenBounds.getWidth()/2);
-		int circley = rand.nextInt((int)primaryScreenBounds.getHeight()/2);
+		int circlex = rand.nextInt((int) graph.getWidth());
+		int circley = rand.nextInt((int) graph.getHeight());
 		int[] ret = new int[2];
 		ret[0] = circlex;
 		ret[1] = circley;
@@ -137,17 +139,29 @@ public class GUI extends Application {
 			ret = generateCoords(circles);
 		}
 		
+		if (circley > relativeHeight(1200) || circley < relativeHeight(25)) {
+			ret = generateCoords(circles);
+		}
+		
+		if (circlex < relativeWidth(25) || circlex > relativeWidth(2400)) {
+			ret = generateCoords(circles);
+		}
+		
+		System.out.println("x: " + ret[0] + " y: " + ret[1]);
 		return ret;
 	}
 
 	public void graphVisual() {
 		// Initializes layout
 		contentBox = new VBox();
-
+		VBox wrapper = new VBox();
+		wrapper.setMinHeight(primaryScreenBounds.getHeight() - 50);
+		wrapper.setMinWidth(primaryScreenBounds.getWidth());
+		
 		// Graph visualization
-		Canvas graph = new Canvas();
-		graph.setWidth(primaryScreenBounds.getWidth() * 0.75);
-		graph.setHeight(primaryScreenBounds.getHeight());
+		graph = new Canvas();
+		graph.setWidth(primaryScreenBounds.getWidth());
+		graph.setHeight(primaryScreenBounds.getHeight() - 50);
 		GraphicsContext gc = graph.getGraphicsContext2D();
 		
 		ArrayList<CircleData> circles = new ArrayList<CircleData>();
@@ -180,7 +194,10 @@ public class GUI extends Application {
 		// Adding all the edges
 
 		// Adds content to scene
-		contentBox.getChildren().addAll(navBar, graph);
+		wrapper.setAlignment(Pos.CENTER);
+		wrapper.getChildren().add(graph);
+		wrapper.setStyle("-fx-background-color: #3490D1;");
+		contentBox.getChildren().addAll(navBar, wrapper);
 
 		Scene graphScene = new Scene(contentBox);
 
