@@ -63,12 +63,14 @@ public class SocialNetwork implements SocialNetworkADT {
 			user1 = graph.getNode(user);
 		} catch (UserNotFoundException e) {
 			user1 = new User(friend);
+			graph.addVertex(user1);
 		}
 
 		try {
 			user2 = graph.getNode(friend);
 		} catch (UserNotFoundException e) {
 			user2 = new User(friend);
+			graph.addVertex(user2);
 		}
 
 		graph.addEdge(user1, user2);
