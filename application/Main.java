@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.Random;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -24,6 +25,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.*;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -33,7 +35,7 @@ import javafx.scene.canvas.Canvas;
 /**
  *
  */
-public class GUI extends Application {
+public class Main extends Application {
 	// store any command-line arguments that were entered.
 	// NOTE: this.getParameters().getRaw() will get these also
 	private static final String APP_TITLE = "Friender";
@@ -58,39 +60,78 @@ public class GUI extends Application {
 		socialNetwork = new SocialNetwork();
 		commands = new ArrayList<>();
 
-		// NAV BAR AND CANVAS
+		// Navbar creation
 		contentBox = new VBox();
-
 		navBar = new HBox();
 		navBar.setMinWidth(primaryScreenBounds.getWidth());
 		navBar.setMinHeight(50);
 
-		// BUTTONS
+		// Navbar button creation
 		Button view = new Button("View");
 		view.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		view.setStyle("-fx-border-color: #000000; -fx-background-color: #ffffff;");
 		view.setOnAction(e -> graphVisual());
-		view.setMinWidth(navBar.getMinWidth() * 0.25);
+		view.setMinWidth(navBar.getMinWidth() * 0.225);
 		view.setMinHeight(navBar.getMinHeight());
 		Button edit = new Button("Edit");
 		edit.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		edit.setStyle("-fx-border-color: #000000; -fx-background-color: #ffffff;");
 		edit.setOnAction(e -> friendManagement());
-		edit.setMinWidth(navBar.getMinWidth() * 0.25);
+		edit.setMinWidth(navBar.getMinWidth() * 0.225);
 		edit.setMinHeight(navBar.getMinHeight());
 		Button friends = new Button("Friends");
 		friends.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		friends.setStyle("-fx-border-color: #000000; -fx-background-color: #ffffff;");
 		friends.setOnAction(e -> userInformation());
-		friends.setMinWidth(navBar.getMinWidth() * 0.25);
+		friends.setMinWidth(navBar.getMinWidth() * 0.225);
 		friends.setMinHeight(navBar.getMinHeight());
-		Button im = new Button("Import");
+		Button im = new Button("Commands");
 		im.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		im.setStyle("-fx-border-color: #000000; -fx-background-color: #ffffff;");
 		im.setOnAction(e -> friendImportExport());
-		im.setMinWidth(navBar.getMinWidth() * 0.25);
+		im.setMinWidth(navBar.getMinWidth() * 0.225);
 		im.setMinHeight(navBar.getMinHeight());
-		Button[] buttons = { view, edit, friends, im };
+		Button exit = new Button();
+		exit.setText("Exit");
+		exit.setTextFill(Color.BLACK);
+		exit.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		exit.setStyle("-fx-border-color: #000000; -fx-background-color: #d93030;");
+		exit.setOnAction(e -> {
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.setTitle("Exit");
+			alert.setHeaderText("Would you like to save before exiting?");
+			alert.setContentText("Choose your option.");
+			ButtonType buttonTypeOne = new ButtonType("Save");
+			ButtonType buttonTypeTwo = new ButtonType("Exit without saving");
+			ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+			alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo, buttonTypeCancel);
+			Optional<ButtonType> result = alert.showAndWait();
+			if (result.get() == buttonTypeOne){
+				TextInputDialog dialog = new TextInputDialog();
+				dialog.setTitle("Command Export");
+				dialog.setHeaderText("Insert the filename of the log file you wish to print commands to");
+				dialog.setContentText("Please enter file name:");
+				Optional<String> saveResult = dialog.showAndWait();
+				saveResult.ifPresent(filename -> {
+					try {
+						socialNetwork.export(filename, commands);
+						Alert alert1 = new Alert(AlertType.INFORMATION);
+						alert1.setTitle("Confirmation");
+						alert1.setHeaderText(null);
+						alert1.setContentText(filename + " was successfully created!");
+						alert1.showAndWait();
+					} catch (FileNotFoundException ex) {
+						ex.printStackTrace();
+					}
+				});
+			} else if (result.get() == buttonTypeTwo) {
+				Platform.exit();
+				System.exit(0);
+			}
+		});
+		exit.setMinWidth(navBar.getMinWidth() * 0.225);
+		exit.setMinHeight(navBar.getMinHeight());
+		Button[] buttons = { view, edit, friends, im, exit};
 
 		navBar.getChildren().addAll(buttons);
 		friendImportExport();
