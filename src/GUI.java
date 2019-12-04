@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -14,13 +15,16 @@ import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -94,6 +98,50 @@ public class GUI extends Application {
 		navBar.getChildren().addAll(buttons);
 		friendImportExport();
 	}
+	
+	class CircleData {
+		
+		int x;
+		int y;
+		int r = 23;
+		String username;
+		
+		CircleData(int x, int y, String username) {
+			this.x = x;
+			this.y = y;
+			this.username = username;
+		}
+	}
+	
+	private boolean overlapCheck(ArrayList<CircleData> circles, int circlex, int circley) {
+		for (CircleData circledata : circles) {
+			int distx = (circlex - circledata.x) * (circlex - circledata.x);
+			int disty = (circley - circledata.y) * (circley - circledata.y);
+			int distSum = distx + disty;
+			int sqrtDist = (int)Math.sqrt(distSum);
+			
+			if (sqrtDist <= 50) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	private int[] generateCoords(ArrayList<CircleData> circles) {
+		Random rand = new Random();
+		int circlex = rand.nextInt((int)primaryScreenBounds.getWidth()/2);
+		int circley = rand.nextInt((int)primaryScreenBounds.getHeight()/2);
+		int[] ret = new int[2];
+		ret[0] = circlex;
+		ret[1] = circley;
+		
+		if (!overlapCheck(circles, circlex, circley)) {
+			ret = generateCoords(circles);
+		}
+		
+		return ret;
+	}
 
 	public void graphVisual() {
 		// Initializes layout
@@ -104,6 +152,35 @@ public class GUI extends Application {
 		graph.setWidth(primaryScreenBounds.getWidth() * 0.75);
 		graph.setHeight(primaryScreenBounds.getHeight());
 		GraphicsContext gc = graph.getGraphicsContext2D();
+		
+		ArrayList<CircleData> circles = new ArrayList<CircleData>();
+		
+		// Adding the verticies
+		
+		for (String user : socialNetwork.getAllUsers()) {
+			
+			StackPane pane = new StackPane();
+			pane.setPrefSize(26, 26);
+			
+			Circle circle = new Circle(23);
+			circle.setStroke(Color.BLACK);
+			circle.setFill(Color.WHITE);
+			circle.setStrokeWidth(3);
+			pane.getChildren().add(circle);
+			
+			Text text = new Text(user);
+			pane.getChildren().add(text);
+			SnapshotParameters parameters = new SnapshotParameters();
+			parameters.setFill(Color.TRANSPARENT);
+			
+			int[] coords = generateCoords(circles);
+			
+			gc.drawImage(pane.snapshot(parameters, null), coords[0], coords[1]);
+			
+			circles.add(new CircleData(coords[0], coords[1], user));
+		}
+		
+		// Adding all the edges
 
 		// Adds content to scene
 		contentBox.getChildren().addAll(navBar, graph);
