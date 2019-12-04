@@ -32,6 +32,10 @@ public class SocialNetwork implements SocialNetworkADT {
 
         return names;
     }
+    
+    public Set<User> getAllUserObj() {
+    	return graph.getAllVertices();
+    }
 
     /**
      * @param username
