@@ -1,6 +1,5 @@
 package application;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -144,7 +143,7 @@ public class Main extends Application {
 
         int x;
         int y;
-        int r = 23;
+        int r = 50;
         String username;
 
         CircleData(int x, int y, String username) {
@@ -189,7 +188,6 @@ public class Main extends Application {
             ret = generateCoords(circles);
         }
 
-        System.out.println("x: " + ret[0] + " y: " + ret[1]);
         return ret;
     }
 
@@ -207,6 +205,7 @@ public class Main extends Application {
         GraphicsContext gc = graph.getGraphicsContext2D();
 
         ArrayList<CircleData> circles = new ArrayList<CircleData>();
+        ArrayList<WritableImage> images = new ArrayList<WritableImage>();
 
         // Adding the verticies
 
@@ -227,13 +226,41 @@ public class Main extends Application {
             parameters.setFill(Color.TRANSPARENT);
 
             int[] coords = generateCoords(circles);
+            
+            WritableImage temp = pane.snapshot(parameters, null);
 
-            gc.drawImage(pane.snapshot(parameters, null), coords[0], coords[1]);
-
+            images.add(temp);
             circles.add(new CircleData(coords[0], coords[1], user));
         }
 
         // Adding all the edges
+        
+        for (CircleData circle : circles) {
+        	List<User> circleFriends;
+        	try {
+				circleFriends = socialNetwork.getFriends(circle.username);
+				for (User friend : circleFriends) {
+					
+					CircleData matchingCircle = new CircleData(0,0,"");
+					
+					for (CircleData friendCircle : circles) {
+						if (friendCircle.username.equals(friend.username)) {
+							matchingCircle = friendCircle;
+						}
+					}
+	        		
+					gc.strokeLine(circle.x + 25, circle.y + 25, matchingCircle.x + 25, matchingCircle.y + 25);
+					
+	        	}
+				
+			} catch (UserNotFoundException e) {
+				
+			}
+        }
+        
+        for (int i = 0; i < images.size(); i++) {
+        	gc.drawImage(images.get(i), circles.get(i).x, circles.get(i).y);
+        }
 
         // Adds content to scene
         wrapper.setAlignment(Pos.CENTER);
