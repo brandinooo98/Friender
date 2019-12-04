@@ -21,10 +21,7 @@ import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
+import javafx.scene.text.*;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
@@ -56,6 +53,7 @@ public class GUI extends Application {
 		// General instantiations
 		window = primaryStage;
 		socialNetwork = new SocialNetwork();
+		commands = new ArrayList<>();
 
 		// NAV BAR AND CANVAS
 		contentBox = new VBox();
@@ -165,15 +163,23 @@ public class GUI extends Application {
 
 		Button addButton = new Button("Create");
 		addButton.setOnAction(e -> {
-			if (socialNetwork.getAllUsers().contains(addArea.getText())) {
+			if (!isValidName(addArea.getText())){
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Username Error");
+				alert.setHeaderText(null);
+				alert.setContentText(addArea.getText() + " is not a valid username, you may only use letters, digits, underscore and apostrophe characters");
+				alert.showAndWait();
+			} else if (socialNetwork.getAllUsers().contains(addArea.getText())) {
 				Alert a = new Alert(AlertType.WARNING);
 				a.setContentText("The user: " + addArea.getText() + " is already in the Social Network.");
 				a.show();
+				commands.add("a " + addArea.getText());
 			} else {
 				socialNetwork.addUser(addArea.getText());
 				Alert a = new Alert(AlertType.INFORMATION);
 				a.setContentText("The user: " + addArea.getText() + " has been added to the Social Network.");
 				a.show();
+				commands.add("a " + addArea.getText());
 			}
 			addArea.clear();
 		});
@@ -200,13 +206,17 @@ public class GUI extends Application {
 		removeButton.setOnAction(e -> {
 			try {
 				socialNetwork.removeUser(removeArea.getText());
+				if(removeArea.getText().equals(centralUser))
+					centralUser = null;
 				Alert a = new Alert(AlertType.INFORMATION);
 				a.setContentText("The user: " + removeArea.getText() + " has been removed from the Social Network.");
 				a.show();
+				commands.add("r " + addArea.getText());
 			} catch (UserNotFoundException e1) {
 				Alert a = new Alert(AlertType.ERROR);
 				a.setContentText("This user does not exist in the Social Network. No changes were made.");
 				a.show();
+				commands.add("r " + addArea.getText());
 			}
 			removeArea.clear();
 		});
@@ -254,9 +264,29 @@ public class GUI extends Application {
 		Button friendshipButton = new Button("Add");
 
 		friendshipButton.setOnAction(e -> {
-			socialNetwork.addFriend(toArea.getText(), fromArea.getText());
-			toArea.clear();
-			fromArea.clear();
+			if (!isValidName(toArea.getText())){
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Username Error");
+				alert.setHeaderText(null);
+				alert.setContentText(toArea.getText() + " is not a valid username, you may only use letters, digits, underscore and apostrophe characters");
+				alert.showAndWait();
+			} else if (!isValidName(fromArea.getText())){
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Username Error");
+				alert.setHeaderText(null);
+				alert.setContentText(fromArea.getText() + " is not a valid username, you may only use letters, digits, underscore and apostrophe characters");
+				alert.showAndWait();
+			} else {
+				socialNetwork.addFriend(toArea.getText(), fromArea.getText());
+				commands.add("a " + toArea.getText() + " " + fromArea.getText());
+				Alert alert1 = new Alert(AlertType.INFORMATION);
+				alert1.setTitle("Confirmation");
+				alert1.setHeaderText(null);
+				alert1.setContentText(toArea.getText() + " and " + fromArea.getText() + " are now friends!");
+				alert1.showAndWait();
+				toArea.clear();
+				fromArea.clear();
+			}
 		});
 
 		friendshipButton.setMinHeight(relativeWidth(75));
@@ -301,6 +331,12 @@ public class GUI extends Application {
 		friendshipButton2.setOnAction(e -> {
 			try {
 				socialNetwork.removeFriend(toArea2.getText(), fromArea2.getText());
+				commands.add("r " + toArea2.getText() + " " + fromArea2.getText());
+				Alert alert1 = new Alert(AlertType.INFORMATION);
+				alert1.setTitle("Confirmation");
+				alert1.setHeaderText(null);
+				alert1.setContentText(toArea2.getText() + " and " + fromArea2.getText() + " are no longer friends!");
+				alert1.showAndWait();
 			} catch (UserNotFoundException e1) {
 				Alert a = new Alert(AlertType.ERROR);
 				a.setContentText("One of the users was invalid. No changes were made.");
@@ -359,8 +395,19 @@ public class GUI extends Application {
 		listLabel.setPadding(new Insets(0, 0, 0, relativeWidth(170)));
 		ListView list = new ListView();
 		list.setMinWidth(relativeWidth(500));
-		// for (User user : socialNetwork.getFriends(centralUser.username))
-		// list.getItems().add(user.username);
+		if (centralUser != null) {
+			try {
+				for (User user : socialNetwork.getFriends(centralUser)) {
+					Text friend = new Text(user.username);
+					friend.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(20)));
+					list.getItems().add(friend);
+				}
+			} catch (UserNotFoundException e) {} // Should never occur
+		} else{
+			Text noUser = new Text("There is no central user");
+			noUser.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(20)));
+			list.getItems().add(noUser);
+		}
 		friendList.getChildren().addAll(listLabel, list);
 		friendList.setPadding(new Insets(relativeHeight(200), 0, 0, relativeWidth(600)));
 		// TODO FIX PADDING?
@@ -368,7 +415,7 @@ public class GUI extends Application {
 		// Current user creation
 		Label userLabel = new Label("Current User: ");
 		userLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
-		Text userText = new Text("username"); // TODO This should be centralUser.username
+		Text userText = new Text(centralUser); // TODO This should be centralUser.username
 		userText.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 		currentUserArea.getChildren().addAll(userLabel, userText);
 		// TODO FIX PADDING?
@@ -380,6 +427,60 @@ public class GUI extends Application {
 		TextField searchBar = new TextField();
 		searchBar.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(30)));
 		Button searchButton = new Button("Search");
+		searchButton.setOnAction(e -> {
+			try {
+				if (!isValidName(searchBar.getText())){
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("Username Error");
+					alert.setHeaderText(null);
+					alert.setContentText(searchBar.getText() + " is not a valid username, you may only use letters, digits, underscore and apostrophe characters");
+					alert.showAndWait();
+				} else if(socialNetwork.getFriends(centralUser).contains(searchBar.getText())) {
+					centralUser = searchBar.getText();
+					commands.add("s " + centralUser);
+					Alert alert = new Alert(AlertType.INFORMATION);
+					alert.setTitle("Confirmation");
+					alert.setHeaderText(null);
+					alert.setContentText(centralUser + " is now the central user!");
+					alert.showAndWait();
+				} else {
+					Alert alert = new Alert(AlertType.CONFIRMATION);
+					alert.setTitle("Confirmation");
+					alert.setHeaderText("User is not friends with " + centralUser);
+					alert.setContentText("Would you like to create a friendship with this user?");
+					Optional<ButtonType> result = alert.showAndWait();
+					if (result.get() == ButtonType.OK) {
+						commands.add("a " + centralUser + " " + searchBar.getText());
+						socialNetwork.addFriend(centralUser, searchBar.getText());
+						centralUser = searchBar.getText();
+						commands.add("s " + centralUser);
+						Alert alert1 = new Alert(AlertType.INFORMATION);
+						alert1.setTitle("Confirmation");
+						alert1.setHeaderText(null);
+						alert1.setContentText(searchBar.getText() + " is now friends with " + centralUser + " and is now the central user");
+						alert1.showAndWait();
+					}
+				}
+			} catch (UserNotFoundException ex) {
+				Alert alert = new Alert(AlertType.CONFIRMATION);
+				alert.setTitle("Confirmation");
+				alert.setHeaderText("Username was not found");
+				alert.setContentText("Would you like to create a user with this username?");
+				Optional<ButtonType> result = alert.showAndWait();
+				if (result.get() == ButtonType.OK) {
+					socialNetwork.addUser(searchBar.getText());
+					centralUser = searchBar.getText();
+					commands.add("a " + centralUser);
+					commands.add("s " + centralUser);
+					Alert alert1 = new Alert(AlertType.INFORMATION);
+					alert1.setTitle("Confirmation");
+					alert1.setHeaderText(null);
+					alert1.setContentText(centralUser + " is now the central user!");
+					alert1.showAndWait();
+				}
+			}
+			userInformation();
+		});
 		searchButton.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(30)));
 		friendSearch.getChildren().addAll(currentUserArea, searchLabel, searchBar, searchButton);
 		friendSearch.setPadding(new Insets(relativeHeight(200), 0, 0, relativeWidth(200)));
@@ -425,8 +526,14 @@ public class GUI extends Application {
 			Optional<String> result = dialog.showAndWait();
 			result.ifPresent(filename -> {
 				try {
-					commands = socialNetwork.importCommands(filename);
-				} catch (FileNotFoundException ex) {
+					commands.addAll(socialNetwork.importCommands(filename));
+					commandParser(commands);
+					Alert alert1 = new Alert(AlertType.INFORMATION);
+					alert1.setTitle("Confirmation");
+					alert1.setHeaderText(null);
+					alert1.setContentText(filename + " was successfully read!");
+					alert1.showAndWait();
+				} catch (FileNotFoundException | UserNotFoundException ex) {
 					ex.printStackTrace();
 				}
 			});
@@ -446,6 +553,11 @@ public class GUI extends Application {
 			result.ifPresent(filename -> {
 				try {
 					socialNetwork.export(filename, commands);
+					Alert alert1 = new Alert(AlertType.INFORMATION);
+					alert1.setTitle("Confirmation");
+					alert1.setHeaderText(null);
+					alert1.setContentText(filename + " was successfully created!");
+					alert1.showAndWait();
 				} catch (FileNotFoundException ex) {
 					ex.printStackTrace();
 				}
@@ -466,13 +578,21 @@ public class GUI extends Application {
 		setUserField.setStyle("-fx-background-color: #ffffff;");
 		Button set = new Button("Set User");
 		set.setOnAction(e -> {
-			if (socialNetwork.getAllUsers().contains(setUserField.getText())) {
+			if (!isValidName(setUserField.getText())){
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Username Error");
+				alert.setHeaderText(null);
+				alert.setContentText(setUserField.getText() + " is not a valid username, you may only use letters, digits, underscore and apostrophe characters");
+				alert.showAndWait();
+			}else if (socialNetwork.getAllUsers().contains(setUserField.getText())) {
 				centralUser = setUserField.getText();
+				commands.add("s " + centralUser);
 				Alert alert = new Alert(AlertType.INFORMATION);
 				alert.setTitle("Confirmation");
 				alert.setHeaderText(null);
-				alert.setContentText(centralUser + "is now the central user!");
+				alert.setContentText(centralUser + " is now the central user!");
 				alert.showAndWait();
+				setUserField.clear();
 			} else {
 				Alert alert = new Alert(AlertType.CONFIRMATION);
 				alert.setTitle("Confirmation");
@@ -482,14 +602,16 @@ public class GUI extends Application {
 				if (result.get() == ButtonType.OK) {
 					socialNetwork.addUser(setUserField.getText());
 					centralUser = setUserField.getText();
+					commands.add("s " + centralUser);
+					commands.add("a " + centralUser);
 					Alert alert1 = new Alert(AlertType.INFORMATION);
 					alert1.setTitle("Confirmation");
 					alert1.setHeaderText(null);
 					alert1.setContentText(centralUser + "is now the central user!");
 					alert1.showAndWait();
 				}
+				setUserField.clear();
 			}
-			setUserField.clear();
 		});
 		set.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(20)));
 		set.setStyle("-fx-background-color: #ffffff;");
@@ -506,8 +628,10 @@ public class GUI extends Application {
 			alert.setContentText("Are you sure you want to clear the Social Network?");
 
 			Optional<ButtonType> result = alert.showAndWait();
-			if (result.get() == ButtonType.OK)
+			if (result.get() == ButtonType.OK) {
 				socialNetwork = new SocialNetwork();
+				centralUser = null;
+			}
 		});
 		clear.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(20)));
 		clear.setStyle("-fx-background-color: #ffffff;");
@@ -533,6 +657,54 @@ public class GUI extends Application {
 		window.setTitle(APP_TITLE);
 		window.setScene(commandScene);
 		window.show();
+	}
+
+	/**
+	 * @param commands
+	 */
+	private String commandParser(ArrayList<String> commands) throws UserNotFoundException {
+		for(String command : commands){
+			String[] commandData = command.split(" ");
+			for(String data : commandData){
+				if (!isValidName(data)){
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("Username Error");
+					alert.setHeaderText(null);
+					alert.setContentText(data + " is not a valid username, you may only use letters, digits, underscore and apostrophe characters");
+					alert.showAndWait();
+				}
+			}
+			switch (commandData[0]){
+				case "a":
+					if(commandData.length == 3)
+						socialNetwork.addFriend(commandData[1], commandData[2]);
+					else
+						socialNetwork.addUser(commandData[1]);
+					break;
+				case "r":
+					if(commandData.length == 3)
+						socialNetwork.removeFriend(commandData[1], commandData[2]);
+					else if (commandData.length == 1){}
+					else
+						socialNetwork.removeUser(commandData[1]);
+					break;
+				case "s":
+						centralUser = commandData[1];
+			}
+		}
+		return null;
+	}
+
+	private boolean isValidName(String username){
+		boolean valid = true;
+		char[] usernameCharacters = username.toCharArray(); // Stores username as an array of characters
+		// Iterates through every character seeing if it is valid or not
+		for (char c : usernameCharacters) {
+			valid = ((c >= 'a') && (c <= 'z')) || ((c >= 'A') && (c <= 'Z')) || ((c >= '0') && (c <= '9')) || c == '\'' || c == '_';
+			if (!valid)
+				break;
+		}
+		return valid;
 	}
 
 	/**

@@ -117,6 +117,7 @@ public class SocialNetwork implements SocialNetworkADT {
 		ArrayList<String> commands = new ArrayList<>(); // Stores commands to be read
 		// If no commands
 		if (!input.hasNext()) {
+			input.close();
 			return commands;
 		} else {
 			// While text is still on the file, adds to commands ArrayList
@@ -124,6 +125,7 @@ public class SocialNetwork implements SocialNetworkADT {
 				String command = input.nextLine();
 				commands.add(command);
 			}
+			input.close();
 			return commands;
 		}
 	}
@@ -157,14 +159,6 @@ public class SocialNetwork implements SocialNetworkADT {
 			}
 		}
 		return mutualFriends;
-	}
-
-	/**
-	 *
-	 */
-	@Override
-	public void displayStatus() {
-
 	}
 
 	/**
