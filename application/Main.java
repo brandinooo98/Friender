@@ -200,7 +200,7 @@ public class Main extends Application {
         wrapper.setMinHeight(primaryScreenBounds.getHeight() - 50);
         wrapper.setMinWidth(primaryScreenBounds.getWidth());
 
-        // application.Graph visualization
+        // Graph visualization
         graph = new Canvas();
         graph.setWidth(primaryScreenBounds.getWidth());
         graph.setHeight(primaryScreenBounds.getHeight() - 50);
@@ -287,7 +287,7 @@ public class Main extends Application {
                 .setPadding(new Insets(relativeWidth(100), relativeWidth(50), relativeWidth(50), relativeWidth(50)));
 
         // Add area creation
-        Label addLabel = new Label("Add application.User: ");
+        Label addLabel = new Label("Add User: ");
         addLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
         addLabel.setPadding(new Insets(0, relativeWidth(78), 0, 0));
 
@@ -329,7 +329,7 @@ public class Main extends Application {
         add.getChildren().addAll(addLabel, addArea, filler1, addButton);
 
         // Remove area creation
-        Label removeLabel = new Label("Remove application.User: ");
+        Label removeLabel = new Label("Remove User: ");
         removeLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 
         TextField removeArea = new TextField();
@@ -550,7 +550,7 @@ public class Main extends Application {
         // TODO FIX PADDING?
 
         // Current user creation
-        Label userLabel = new Label("Current application.User: ");
+        Label userLabel = new Label("Current User: ");
         userLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
         Text userText = new Text(centralUser); // TODO This should be centralUser.username
         userText.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
@@ -583,7 +583,7 @@ public class Main extends Application {
                 } else {
                     Alert alert = new Alert(AlertType.CONFIRMATION);
                     alert.setTitle("Confirmation");
-                    alert.setHeaderText("application.User is not friends with " + centralUser);
+                    alert.setHeaderText("User is not friends with " + centralUser);
                     alert.setContentText("Would you like to create a friendship with this user?");
                     Optional<ButtonType> result = alert.showAndWait();
                     if (result.get() == ButtonType.OK) {
@@ -707,14 +707,14 @@ public class Main extends Application {
         importExport.getChildren().addAll(im, export);
 
         // Set user and clear buttons and fields
-        Label setUserLabel = new Label("Set application.Main application.User:");
+        Label setUserLabel = new Label("Set Main User:");
         setUserLabel.setPadding(new Insets(0, 0, 0, relativeWidth(18)));
         setUserLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(20)));
         TextField setUserField = new TextField();
         setUserField.setPrefSize(relativeWidth(100), relativeHeight(20));
         setUserField.setMinHeight(relativeWidth(50));
         setUserField.setStyle("-fx-background-color: #ffffff;");
-        Button set = new Button("Set application.User");
+        Button set = new Button("Set User");
         set.setOnAction(e -> {
             if (!isValidName(setUserField.getText())) {
                 Alert alert = new Alert(AlertType.ERROR);
