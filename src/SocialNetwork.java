@@ -164,14 +164,6 @@ public class SocialNetwork implements SocialNetworkADT {
 	}
 
 	/**
-	 *
-	 */
-	@Override
-	public void displayStatus() {
-
-	}
-
-	/**
 	 * @param username
 	 * @return
 	 */

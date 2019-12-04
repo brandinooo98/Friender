@@ -75,9 +75,9 @@ public interface SocialNetworkADT {
 	public List<User> getMutualFriends(String user1, String user2) throws UserNotFoundException;
 
 	/**
-	 *
+	 * @param username
+	 * @return
+	 * @throws UserNotFoundException
 	 */
-	public void displayStatus();
-
 	public List<User> graphTraversal(String username) throws UserNotFoundException;
 }
