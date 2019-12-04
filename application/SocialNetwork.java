@@ -32,6 +32,10 @@ public class SocialNetwork implements SocialNetworkADT {
 
         return names;
     }
+    
+    public Set<User> getAllUserObj() {
+    	return graph.getAllVertices();
+    }
 
     /**
      * @param username
@@ -63,7 +67,7 @@ public class SocialNetwork implements SocialNetworkADT {
         try {
             user1 = graph.getNode(user);
         } catch (UserNotFoundException e) {
-            user1 = new User(friend);
+            user1 = new User(user);
             graph.addVertex(user1);
         }
 

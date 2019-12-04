@@ -1,6 +1,5 @@
 package application;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,19 +8,16 @@ import java.util.Random;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -29,7 +25,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.*;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.scene.image.Image;
 import javafx.scene.canvas.Canvas;
 
 /**
@@ -543,7 +538,8 @@ public class Main extends Application {
     /**
      *
      */
-    public void userInformation() {
+    @SuppressWarnings("unlikely-arg-type")
+	public void userInformation() {
         // Initializes layout
         contentBox = new VBox();
         contentBox.setStyle("-fx-background-color: #3490D1;");
@@ -556,7 +552,7 @@ public class Main extends Application {
         Label listLabel = new Label("Friends");
         listLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
         listLabel.setPadding(new Insets(0, 0, 0, relativeWidth(170)));
-        ListView list = new ListView();
+        ListView<Text> list = new ListView<Text>();
         list.setMinWidth(relativeWidth(500));
         if (centralUser != null) {
             try {
@@ -593,13 +589,20 @@ public class Main extends Application {
         Button searchButton = new Button("Search");
         searchButton.setOnAction(e -> {
             try {
+            	User textUser = null;
+            	for (User user : socialNetwork.getAllUserObj()) {
+            		if (user.username.equals(searchBar.getText())) {
+            			textUser = user;
+            		}
+            	}
+            	
                 if (!isValidName(searchBar.getText())) {
                     Alert alert = new Alert(AlertType.ERROR);
                     alert.setTitle("Username Error");
                     alert.setHeaderText(null);
                     alert.setContentText(searchBar.getText() + " is not a valid username, you may only use letters, digits, underscore and apostrophe characters");
                     alert.showAndWait();
-                } else if (socialNetwork.getFriends(centralUser).contains(searchBar.getText())) {
+                } else if (socialNetwork.getFriends(centralUser).contains(textUser)) {
                     centralUser = searchBar.getText();
                     commands.add("s " + centralUser);
                     Alert alert = new Alert(AlertType.INFORMATION);
@@ -610,10 +613,11 @@ public class Main extends Application {
                 } else {
                     Alert alert = new Alert(AlertType.CONFIRMATION);
                     alert.setTitle("Confirmation");
-                    alert.setHeaderText("User is not friends with " + centralUser);
+                    alert.setHeaderText("User is not friends with " + searchBar.getText());
                     alert.setContentText("Would you like to create a friendship with this user?");
                     Optional<ButtonType> result = alert.showAndWait();
                     if (result.get() == ButtonType.OK) {
+                    	String oldCentralUser = centralUser;
                         commands.add("a " + centralUser + " " + searchBar.getText());
                         socialNetwork.addFriend(centralUser, searchBar.getText());
                         centralUser = searchBar.getText();
@@ -621,7 +625,7 @@ public class Main extends Application {
                         Alert alert1 = new Alert(AlertType.INFORMATION);
                         alert1.setTitle("Confirmation");
                         alert1.setHeaderText(null);
-                        alert1.setContentText(searchBar.getText() + " is now friends with " + centralUser + " and is now the central user");
+                        alert1.setContentText(searchBar.getText() + " is now friends with " + oldCentralUser + " and is now the central user");
                         alert1.showAndWait();
                     }
                 }
