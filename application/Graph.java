@@ -10,7 +10,6 @@ import java.util.Set;
  * implementation of a graph
  * 
  * @author ATeam 169
- *
  */
 public class Graph implements GraphADT {
 

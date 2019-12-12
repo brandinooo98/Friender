@@ -1,5 +1,7 @@
 package application;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,16 +10,19 @@ import java.util.Random;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -25,10 +30,13 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.*;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.scene.image.Image;
 import javafx.scene.canvas.Canvas;
 
 /**
+ * Graphical User Interface for the Social Network
  *
+ * @author ATeam 169
  */
 public class Main extends Application {
     // store any command-line arguments that were entered.
@@ -44,11 +52,12 @@ public class Main extends Application {
     private Canvas graph;
 
     /**
-     * @param primaryStage
-     * @throws Exception
+     * Operations done on startup
+     *
+     * @param primaryStage - Stage used to store scenes
      */
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 
         // General instantiations
@@ -134,11 +143,14 @@ public class Main extends Application {
         friendImportExport();
     }
 
+    /**
+     * Used to store data within vertices in the visualization
+     */
     class CircleData {
 
         int x;
         int y;
-        int r = 50;
+        int r = 23;
         String username;
 
         CircleData(int x, int y, String username) {
@@ -148,6 +160,14 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * Checks if circles overlap
+     *
+     * @param circles - List of circles
+     * @param circlex - X distance between circle
+     * @param circley - Y distance between circle
+     * @return - True if overlaps, false otherwise
+     */
     private boolean overlapCheck(ArrayList<CircleData> circles, int circlex, int circley) {
         for (CircleData circledata : circles) {
             int distx = (circlex - circledata.x) * (circlex - circledata.x);
@@ -163,6 +183,12 @@ public class Main extends Application {
         return true;
     }
 
+    /**
+     * Randomly generates coordinates for the graph visualization
+     *
+     * @param circles - Circles to generate coordinates of
+     * @return - Array of coordinates
+     */
     private int[] generateCoords(ArrayList<CircleData> circles) {
         Random rand = new Random();
         int circlex = rand.nextInt((int) graph.getWidth());
@@ -183,9 +209,13 @@ public class Main extends Application {
             ret = generateCoords(circles);
         }
 
+        System.out.println("x: " + ret[0] + " y: " + ret[1]);
         return ret;
     }
 
+    /**
+     * Setup of view screen
+     */
     public void graphVisual() {
         // Initializes layout
         contentBox = new VBox();
@@ -193,14 +223,13 @@ public class Main extends Application {
         wrapper.setMinHeight(primaryScreenBounds.getHeight() - 50);
         wrapper.setMinWidth(primaryScreenBounds.getWidth());
 
-        // Graph visualization
+        // application.Graph visualization
         graph = new Canvas();
         graph.setWidth(primaryScreenBounds.getWidth());
         graph.setHeight(primaryScreenBounds.getHeight() - 50);
         GraphicsContext gc = graph.getGraphicsContext2D();
 
         ArrayList<CircleData> circles = new ArrayList<CircleData>();
-        ArrayList<WritableImage> images = new ArrayList<WritableImage>();
 
         // Adding the verticies
 
@@ -221,41 +250,13 @@ public class Main extends Application {
             parameters.setFill(Color.TRANSPARENT);
 
             int[] coords = generateCoords(circles);
-            
-            WritableImage temp = pane.snapshot(parameters, null);
 
-            images.add(temp);
+            gc.drawImage(pane.snapshot(parameters, null), coords[0], coords[1]);
+
             circles.add(new CircleData(coords[0], coords[1], user));
         }
 
         // Adding all the edges
-        
-        for (CircleData circle : circles) {
-        	List<User> circleFriends;
-        	try {
-				circleFriends = socialNetwork.getFriends(circle.username);
-				for (User friend : circleFriends) {
-					
-					CircleData matchingCircle = new CircleData(0,0,"");
-					
-					for (CircleData friendCircle : circles) {
-						if (friendCircle.username.equals(friend.username)) {
-							matchingCircle = friendCircle;
-						}
-					}
-	        		
-					gc.strokeLine(circle.x + 25, circle.y + 25, matchingCircle.x + 25, matchingCircle.y + 25);
-					
-	        	}
-				
-			} catch (UserNotFoundException e) {
-				
-			}
-        }
-        
-        for (int i = 0; i < images.size(); i++) {
-        	gc.drawImage(images.get(i), circles.get(i).x, circles.get(i).y);
-        }
 
         // Adds content to scene
         wrapper.setAlignment(Pos.CENTER);
@@ -278,14 +279,29 @@ public class Main extends Application {
         window.show();
     }
 
+    /**
+     * Converts a width value to the user's screen size
+     *
+     * @param in - Width to convert
+     * @return - Converted width
+     */
     private double relativeWidth(double in) {
         return primaryScreenBounds.getWidth() * (in / primaryScreenBounds.getWidth());
     }
 
+    /**
+     * Converts a height value to the user's screen size
+     *
+     * @param in - Height to convert
+     * @return - Converted height
+     */
     private double relativeHeight(double in) {
         return primaryScreenBounds.getHeight() * (in / primaryScreenBounds.getHeight());
     }
 
+    /**
+     * Screen of edit tab
+     */
     public void friendManagement() {
         primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 
@@ -309,7 +325,7 @@ public class Main extends Application {
                 .setPadding(new Insets(relativeWidth(100), relativeWidth(50), relativeWidth(50), relativeWidth(50)));
 
         // Add area creation
-        Label addLabel = new Label("Add User: ");
+        Label addLabel = new Label("Add application.User: ");
         addLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
         addLabel.setPadding(new Insets(0, relativeWidth(78), 0, 0));
 
@@ -351,7 +367,7 @@ public class Main extends Application {
         add.getChildren().addAll(addLabel, addArea, filler1, addButton);
 
         // Remove area creation
-        Label removeLabel = new Label("Remove User: ");
+        Label removeLabel = new Label("Remove application.User: ");
         removeLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 
         TextField removeArea = new TextField();
@@ -536,10 +552,9 @@ public class Main extends Application {
     }
 
     /**
-     *
+     * Screen of user friends
      */
-    @SuppressWarnings("unlikely-arg-type")
-	public void userInformation() {
+    public void userInformation() {
         // Initializes layout
         contentBox = new VBox();
         contentBox.setStyle("-fx-background-color: #3490D1;");
@@ -552,7 +567,7 @@ public class Main extends Application {
         Label listLabel = new Label("Friends");
         listLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
         listLabel.setPadding(new Insets(0, 0, 0, relativeWidth(170)));
-        ListView<Text> list = new ListView<Text>();
+        ListView list = new ListView();
         list.setMinWidth(relativeWidth(500));
         if (centralUser != null) {
             try {
@@ -570,15 +585,13 @@ public class Main extends Application {
         }
         friendList.getChildren().addAll(listLabel, list);
         friendList.setPadding(new Insets(relativeHeight(200), 0, 0, relativeWidth(600)));
-        // TODO FIX PADDING?
 
         // Current user creation
-        Label userLabel = new Label("Current User: ");
+        Label userLabel = new Label("Current application.User: ");
         userLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
-        Text userText = new Text(centralUser); // TODO This should be centralUser.username
+        Text userText = new Text(centralUser);
         userText.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
         currentUserArea.getChildren().addAll(userLabel, userText);
-        // TODO FIX PADDING?
 
         // Friend search creation
         Label searchLabel = new Label("Find Friend:");
@@ -589,20 +602,13 @@ public class Main extends Application {
         Button searchButton = new Button("Search");
         searchButton.setOnAction(e -> {
             try {
-            	User textUser = null;
-            	for (User user : socialNetwork.getAllUserObj()) {
-            		if (user.username.equals(searchBar.getText())) {
-            			textUser = user;
-            		}
-            	}
-            	
                 if (!isValidName(searchBar.getText())) {
                     Alert alert = new Alert(AlertType.ERROR);
                     alert.setTitle("Username Error");
                     alert.setHeaderText(null);
                     alert.setContentText(searchBar.getText() + " is not a valid username, you may only use letters, digits, underscore and apostrophe characters");
                     alert.showAndWait();
-                } else if (socialNetwork.getFriends(centralUser).contains(textUser)) {
+                } else if (socialNetwork.getFriends(centralUser).contains(searchBar.getText())) {
                     centralUser = searchBar.getText();
                     commands.add("s " + centralUser);
                     Alert alert = new Alert(AlertType.INFORMATION);
@@ -613,11 +619,10 @@ public class Main extends Application {
                 } else {
                     Alert alert = new Alert(AlertType.CONFIRMATION);
                     alert.setTitle("Confirmation");
-                    alert.setHeaderText("User is not friends with " + searchBar.getText());
+                    alert.setHeaderText("application.User is not friends with " + centralUser);
                     alert.setContentText("Would you like to create a friendship with this user?");
                     Optional<ButtonType> result = alert.showAndWait();
                     if (result.get() == ButtonType.OK) {
-                    	String oldCentralUser = centralUser;
                         commands.add("a " + centralUser + " " + searchBar.getText());
                         socialNetwork.addFriend(centralUser, searchBar.getText());
                         centralUser = searchBar.getText();
@@ -625,7 +630,7 @@ public class Main extends Application {
                         Alert alert1 = new Alert(AlertType.INFORMATION);
                         alert1.setTitle("Confirmation");
                         alert1.setHeaderText(null);
-                        alert1.setContentText(searchBar.getText() + " is now friends with " + oldCentralUser + " and is now the central user");
+                        alert1.setContentText(searchBar.getText() + " is now friends with " + centralUser + " and is now the central user");
                         alert1.showAndWait();
                     }
                 }
@@ -652,12 +657,10 @@ public class Main extends Application {
         searchButton.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(30)));
         friendSearch.getChildren().addAll(currentUserArea, searchLabel, searchBar, searchButton);
         friendSearch.setPadding(new Insets(relativeHeight(200), 0, 0, relativeWidth(200)));
-        // TODO PADDING
 
         // Adds content to the scene
         content.getChildren().addAll(friendSearch, friendList);
         contentBox.getChildren().addAll(navBar, content);
-        // TODO COLOR / PADDING
         Scene userScene = new Scene(contentBox);
 
 
@@ -675,7 +678,7 @@ public class Main extends Application {
     }
 
     /**
-     *
+     * Setup of the commands screen
      */
     public void friendImportExport() {
         // Initializes layout
@@ -738,14 +741,14 @@ public class Main extends Application {
         importExport.getChildren().addAll(im, export);
 
         // Set user and clear buttons and fields
-        Label setUserLabel = new Label("Set Main User:");
+        Label setUserLabel = new Label("Set application.Main application.User:");
         setUserLabel.setPadding(new Insets(0, 0, 0, relativeWidth(18)));
         setUserLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(20)));
         TextField setUserField = new TextField();
         setUserField.setPrefSize(relativeWidth(100), relativeHeight(20));
         setUserField.setMinHeight(relativeWidth(50));
         setUserField.setStyle("-fx-background-color: #ffffff;");
-        Button set = new Button("Set User");
+        Button set = new Button("Set application.User");
         set.setOnAction(e -> {
             if (!isValidName(setUserField.getText())) {
                 Alert alert = new Alert(AlertType.ERROR);
@@ -776,7 +779,7 @@ public class Main extends Application {
                     Alert alert1 = new Alert(AlertType.INFORMATION);
                     alert1.setTitle("Confirmation");
                     alert1.setHeaderText(null);
-                    alert1.setContentText(centralUser + "is now the central user!");
+                    alert1.setContentText(centralUser + " is now the central user!");
                     alert1.showAndWait();
                 }
                 setUserField.clear();
@@ -829,9 +832,12 @@ public class Main extends Application {
     }
 
     /**
-     * @param commands
+     * Runs a list of commands
+     *
+     * @param commands - List of commands to be run
+     * @throws UserNotFoundException - If a user is not found
      */
-    private String commandParser(ArrayList<String> commands) throws UserNotFoundException {
+    private void commandParser(ArrayList<String> commands) throws UserNotFoundException {
         for (String command : commands) {
             String[] commandData = command.split(" ");
             for (String data : commandData) {
@@ -861,9 +867,14 @@ public class Main extends Application {
                     centralUser = commandData[1];
             }
         }
-        return null;
     }
 
+    /**
+     * Checks if a username is valid
+     *
+     * @param username - Username to be checked
+     * @return - True if valid, false otherwise
+     */
     private boolean isValidName(String username) {
         boolean valid = true;
         char[] usernameCharacters = username.toCharArray(); // Stores username as an array of characters
@@ -877,7 +888,9 @@ public class Main extends Application {
     }
 
     /**
-     * @param args
+     * Launches the program
+     *
+     * @param args - Commandline arguments
      */
     public static void main(String[] args) {
         launch(args);

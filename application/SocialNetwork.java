@@ -6,13 +6,15 @@ import java.io.PrintWriter;
 import java.util.*;
 
 /**
+ *  Holds methods that preform operations and traversals on the graph
  *
+ *  @author ATeam 169
  */
 public class SocialNetwork implements SocialNetworkADT {
     private Graph graph;
 
     /**
-     *
+     * Constructor of the SocialNetwork
      */
     public SocialNetwork() {
         graph = new Graph(); // Initializes graph
@@ -32,14 +34,12 @@ public class SocialNetwork implements SocialNetworkADT {
 
         return names;
     }
-    
-    public Set<User> getAllUserObj() {
-    	return graph.getAllVertices();
-    }
 
     /**
-     * @param username
-     * @throws UserNotFoundException
+     * Adds a user to the graph
+     *
+     * @param username - User to be added
+     * @throws UserNotFoundException - If user is not found
      */
     @Override
     public void addUser(String username) {
@@ -50,6 +50,12 @@ public class SocialNetwork implements SocialNetworkADT {
         }
     }
 
+    /**
+     * Removes a user from a graph
+     *
+     * @param username - User to be removed
+     * @throws UserNotFoundException - If user is not found
+     */
     @Override
     public void removeUser(String username) throws UserNotFoundException {
         User user = graph.getNode(username);
@@ -57,8 +63,10 @@ public class SocialNetwork implements SocialNetworkADT {
     }
 
     /**
-     * @param user
-     * @param friend
+     * Adds a friendship between a user and a friend
+     *
+     * @param user - User to add a friendship from
+     * @param friend - User to become a friend
      */
     @Override
     public void addFriend(String user, String friend) {
@@ -67,7 +75,7 @@ public class SocialNetwork implements SocialNetworkADT {
         try {
             user1 = graph.getNode(user);
         } catch (UserNotFoundException e) {
-            user1 = new User(user);
+            user1 = new User(friend);
             graph.addVertex(user1);
         }
 
@@ -81,6 +89,13 @@ public class SocialNetwork implements SocialNetworkADT {
         graph.addEdge(user1, user2);
     }
 
+    /**
+     * Removes a friendship from the graph
+     *
+     * @param user - User to remove friend of
+     * @param friend - Friend to be removed
+     * @throws UserNotFoundException - If the user or friend are not found
+     */
     @Override
     public void removeFriend(String user, String friend) throws UserNotFoundException {
         User user1 = graph.getNode(user);
@@ -89,23 +104,27 @@ public class SocialNetwork implements SocialNetworkADT {
     }
 
     /**
-     * @param user
-     * @return
+     * Preforms Dijsktra's shortest path traversal
+     *
+     * @param username - User to start traversal from
+     * @return - List of the path
      */
     @Override
-    public List<User> shortestPath(String user) {
+    public List<User> shortestPath(String username) {
         // Dijsktra
         return null;
     }
 
     /**
-     * @param fileName
-     * @param commands
-     * @throws FileNotFoundException
+     * Prints commands to a file of a given name
+     *
+     * @param filename - Name of file to print to
+     * @param commands - List of commands to print
+     * @throws FileNotFoundException - If file to print to is not found
      */
     @Override
-    public void export(String fileName, ArrayList<String> commands) throws FileNotFoundException {
-        File file = new File(fileName); // Creates instance of given file
+    public void export(String filename, ArrayList<String> commands) throws FileNotFoundException {
+        File file = new File(filename); // Creates instance of given file
         PrintWriter printWriter = new PrintWriter(file);
         // Prints all commands onto file
         for (String command : commands)
@@ -114,9 +133,11 @@ public class SocialNetwork implements SocialNetworkADT {
     }
 
     /**
-     * @param fileName
-     * @return
-     * @throws FileNotFoundException
+     * Imports and parses commands from a given file
+     *
+     * @param fileName - Name of file
+     * @return - ArrayList of commands
+     * @throws FileNotFoundException - If file of given filename is not found
      */
     public ArrayList<String> importCommands(String fileName) throws FileNotFoundException {
         File file = new File(fileName); // Creates instance of given file
@@ -138,9 +159,11 @@ public class SocialNetwork implements SocialNetworkADT {
     }
 
     /**
-     * @param username
-     * @return
-     * @throws UserNotFoundException
+     * Returns a list of friends of a User
+     *
+     * @param username - User to find friends of
+     * @return - List of friends
+     * @throws UserNotFoundException - If given user is not found
      */
     @Override
     public List<User> getFriends(String username) throws UserNotFoundException {
@@ -150,9 +173,11 @@ public class SocialNetwork implements SocialNetworkADT {
     }
 
     /**
-     * @param username1
-     * @param username2
-     * @return
+     * Returns a list of mutual friends between two Users
+     *
+     * @param username1 - First user
+     * @param username2 - Second user
+     * @return - List of mutual friends
      */
     @Override
     public List<User> getMutualFriends(String username1, String username2) throws UserNotFoundException {
@@ -169,8 +194,10 @@ public class SocialNetwork implements SocialNetworkADT {
     }
 
     /**
-     * @param username
-     * @return
+     *  Returns a depth first search of the graph
+     *
+     * @param username - User to be the central user of the traversal
+     * @return - List of the depth first search traversal
      */
     @Override
     public List<User> graphTraversal(String username) throws UserNotFoundException {
