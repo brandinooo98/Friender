@@ -17,7 +17,9 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 /**
+ * Contains tests for the SocialNetwork class
  *
+ * @author ATeam 169
  */
 public class SocialNetworkTest {
     SocialNetwork test;
