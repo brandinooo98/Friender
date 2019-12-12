@@ -102,15 +102,65 @@ public class SocialNetwork implements SocialNetworkADT {
     }
 
     /**
-     * Preforms Dijsktra's shortest path traversal
+     * Performs shortest path traversal
      *
      * @param username - User to start traversal from
      * @return - List of the path
      */
     @Override
-    public List<User> shortestPath(String username) {
-        // Dijsktra
-        return null;
+    public List<User> shortestPath(String username, String endUser) {
+        LinkedList<User> visited = new LinkedList<>(); // Stores vertices already traversed through
+        LinkedList<User> queue = new LinkedList<>(); // Stores vertices used for traversal
+        LinkedList<User> ordered = new LinkedList<>(); // Stores vertices in BFS order
+        LinkedList<User> shortestPath = new LinkedList<>(); // Stores shortest path from username to endUser
+        String[] previous = new String[graph.getAllVertices().size()];
+        // initialize all spots in previous to a non null value
+        for(int i = 0; i < previous.length; i++) {
+            previous[i] = "-!!-----1";
+        }
+
+        // Starts traversal from given user
+        User centralUser = null;
+        User end = null;
+        try {
+            centralUser = graph.getNode(username);
+            end = graph.getNode(endUser);
+        } catch (UserNotFoundException e) {
+            // Prompt that user isn't in the graph?
+        }
+
+        visited.add(centralUser);
+        queue.add(centralUser);
+
+        // Iterates until all nodes have been traversed
+        while (queue.size() != 0) {
+            User user = queue.poll();
+            ordered.add(user); // Adds node to list to be returned
+
+            // Adds all adjacent nodes to queue if not visited already
+            List<User> adj = graph.getAdjacentVerticesOf(user);
+            for (User adjUser : adj) {
+                if (!visited.contains(adjUser)) {
+                    previous[adjUser.username.hashCode() % previous.length] = user.username;
+                    visited.add(adjUser);
+                    queue.add(adjUser);
+                }
+            }
+        }
+
+        // Add Users to the shortestPath list
+        String currentName = endUser;
+        while(!previous[endUser.hashCode() % previous.length].equals("-!!-----1")) {
+            try {
+                shortestPath.add(graph.getNode(currentName));
+                currentName = previous[currentName.hashCode() % previous.length];
+            } catch (UserNotFoundException e) {
+                // User should be found?
+            }
+        }
+        shortestPath.add(centralUser);
+
+        return shortestPath;
     }
 
     /**
