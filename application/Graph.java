@@ -1,5 +1,3 @@
-package application;
-
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
