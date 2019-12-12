@@ -9,16 +9,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-//Title: Friender
-//Files: CycleException.java, Graph.java, GraphADT.java, GraphTest.java, Main.java, SocialNetwork.java, SocialNetworkADT.java, SocialNetworkTest.java, User.java, UserNotFoundException.java
-//Description: My implementation of a graph
-//
-//Author: Nate Wiltzius ATeam 169
-//Email: nwiltzius@wisc.edu
-//Lecturer's Name: Debra Deppeler
-//Course: CS400 Fall 2019
-//Lecture: 001
-
 /**
  * class to test the graph implementation
  * 
