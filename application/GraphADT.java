@@ -84,9 +84,9 @@ public interface GraphADT {
 	/**
 	 * method to find the application.User given the username String
 	 * 
-	 * @param vertex
-	 * @return
-	 * @throws UserNotFoundException
+	 * @param username of the user we want
+	 * @return the User that corresponds to the vertex given
+	 * @throws UserNotFoundException if param is null or the user isn't in the graph
 	 */
 	public User getNode(String username) throws UserNotFoundException;
 
@@ -96,5 +96,4 @@ public interface GraphADT {
 	 * @return a Set<String> which contains all the vertices in the graph
 	 */
 	public Set<User> getAllVertices();
-
 }
