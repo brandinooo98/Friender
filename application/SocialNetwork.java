@@ -192,10 +192,10 @@ public class SocialNetwork implements SocialNetworkADT {
     }
 
     /**
-     *  Returns a depth first search of the graph
+     *  Returns a breadth first search of the graph
      *
      * @param username - User to be the central user of the traversal
-     * @return - List of the depth first search traversal
+     * @return - List of the breadth first search traversal
      */
     @Override
     public List<User> graphTraversal(String username) throws UserNotFoundException {
