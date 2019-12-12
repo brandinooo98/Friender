@@ -1,7 +1,5 @@
 package application;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,19 +8,16 @@ import java.util.Random;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -30,7 +25,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.*;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.scene.image.Image;
 import javafx.scene.canvas.Canvas;
 
 /**
@@ -223,13 +217,14 @@ public class Main extends Application {
         wrapper.setMinHeight(primaryScreenBounds.getHeight() - 50);
         wrapper.setMinWidth(primaryScreenBounds.getWidth());
 
-        // application.Graph visualization
+        // Graph visualization
         graph = new Canvas();
         graph.setWidth(primaryScreenBounds.getWidth());
         graph.setHeight(primaryScreenBounds.getHeight() - 50);
         GraphicsContext gc = graph.getGraphicsContext2D();
 
         ArrayList<CircleData> circles = new ArrayList<CircleData>();
+        ArrayList<WritableImage> images = new ArrayList<WritableImage>();
 
         // Adding the verticies
 
@@ -257,6 +252,32 @@ public class Main extends Application {
         }
 
         // Adding all the edges
+        for (CircleData circle : circles) {
+            List<User> circleFriends;
+            try {
+                circleFriends = socialNetwork.getFriends(circle.username);
+                for (User friend : circleFriends) {
+
+                    CircleData matchingCircle = new CircleData(0,0,"");
+
+                    for (CircleData friendCircle : circles) {
+                        if (friendCircle.username.equals(friend.username)) {
+                            matchingCircle = friendCircle;
+                        }
+                    }
+
+                    gc.strokeLine(circle.x + 25, circle.y + 25, matchingCircle.x + 25, matchingCircle.y + 25);
+
+                }
+
+            } catch (UserNotFoundException e) {
+
+            }
+        }
+
+        for (int i = 0; i < images.size(); i++) {
+            gc.drawImage(images.get(i), circles.get(i).x, circles.get(i).y);
+        }
 
         // Adds content to scene
         wrapper.setAlignment(Pos.CENTER);
@@ -325,7 +346,7 @@ public class Main extends Application {
                 .setPadding(new Insets(relativeWidth(100), relativeWidth(50), relativeWidth(50), relativeWidth(50)));
 
         // Add area creation
-        Label addLabel = new Label("Add application.User: ");
+        Label addLabel = new Label("Add User: ");
         addLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
         addLabel.setPadding(new Insets(0, relativeWidth(78), 0, 0));
 
@@ -339,18 +360,18 @@ public class Main extends Application {
             if (!isValidName(addArea.getText())) {
                 Alert alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Username Error");
-                alert.setHeaderText(null);
                 alert.setContentText(addArea.getText() + " is not a valid username, you may only use letters, digits, underscore and apostrophe characters");
                 alert.showAndWait();
             } else if (socialNetwork.getAllUsers().contains(addArea.getText())) {
                 Alert a = new Alert(AlertType.WARNING);
-                a.setContentText("The user: " + addArea.getText() + " is already in the Social Network.");
+                a.setContentText("The User: " + addArea.getText() + " is already in the Social Network.");
                 a.show();
                 commands.add("a " + addArea.getText());
             } else {
                 socialNetwork.addUser(addArea.getText());
                 Alert a = new Alert(AlertType.INFORMATION);
-                a.setContentText("The user: " + addArea.getText() + " has been added to the Social Network.");
+                a.setTitle("User Confirmation");
+                a.setContentText("The User: " + addArea.getText() + " has been added to the Social Network.");
                 a.show();
                 commands.add("a " + addArea.getText());
             }
@@ -367,7 +388,7 @@ public class Main extends Application {
         add.getChildren().addAll(addLabel, addArea, filler1, addButton);
 
         // Remove area creation
-        Label removeLabel = new Label("Remove application.User: ");
+        Label removeLabel = new Label("Remove User: ");
         removeLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 
         TextField removeArea = new TextField();
@@ -587,7 +608,7 @@ public class Main extends Application {
         friendList.setPadding(new Insets(relativeHeight(200), 0, 0, relativeWidth(600)));
 
         // Current user creation
-        Label userLabel = new Label("Current application.User: ");
+        Label userLabel = new Label("Current User: ");
         userLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
         Text userText = new Text(centralUser);
         userText.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
@@ -619,7 +640,7 @@ public class Main extends Application {
                 } else {
                     Alert alert = new Alert(AlertType.CONFIRMATION);
                     alert.setTitle("Confirmation");
-                    alert.setHeaderText("application.User is not friends with " + centralUser);
+                    alert.setHeaderText("User is not friends with " + centralUser);
                     alert.setContentText("Would you like to create a friendship with this user?");
                     Optional<ButtonType> result = alert.showAndWait();
                     if (result.get() == ButtonType.OK) {
@@ -741,14 +762,14 @@ public class Main extends Application {
         importExport.getChildren().addAll(im, export);
 
         // Set user and clear buttons and fields
-        Label setUserLabel = new Label("Set application.Main application.User:");
+        Label setUserLabel = new Label("Set Main User:");
         setUserLabel.setPadding(new Insets(0, 0, 0, relativeWidth(18)));
         setUserLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(20)));
         TextField setUserField = new TextField();
         setUserField.setPrefSize(relativeWidth(100), relativeHeight(20));
         setUserField.setMinHeight(relativeWidth(50));
         setUserField.setStyle("-fx-background-color: #ffffff;");
-        Button set = new Button("Set application.User");
+        Button set = new Button("Set User");
         set.setOnAction(e -> {
             if (!isValidName(setUserField.getText())) {
                 Alert alert = new Alert(AlertType.ERROR);
