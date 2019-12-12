@@ -209,94 +209,94 @@ public class Main extends Application {
 	 * Setup of view screen
 	 */
 	public void graphVisual() {
-        // Initializes layout
-        contentBox = new VBox();
-        VBox wrapper = new VBox();
-        wrapper.setMinHeight(primaryScreenBounds.getHeight() - 50);
-        wrapper.setMinWidth(primaryScreenBounds.getWidth());
+		// Initializes layout
+		contentBox = new VBox();
+		VBox wrapper = new VBox();
+		wrapper.setMinHeight(primaryScreenBounds.getHeight() - 50);
+		wrapper.setMinWidth(primaryScreenBounds.getWidth());
 
-        // Graph visualization
-        graph = new Canvas();
-        graph.setWidth(primaryScreenBounds.getWidth());
-        graph.setHeight(primaryScreenBounds.getHeight() - 50);
-        GraphicsContext gc = graph.getGraphicsContext2D();
+		// Graph visualization
+		graph = new Canvas();
+		graph.setWidth(primaryScreenBounds.getWidth());
+		graph.setHeight(primaryScreenBounds.getHeight() - 50);
+		GraphicsContext gc = graph.getGraphicsContext2D();
 
-        ArrayList<CircleData> circles = new ArrayList<CircleData>();
-        ArrayList<WritableImage> images = new ArrayList<WritableImage>();
+		ArrayList<CircleData> circles = new ArrayList<CircleData>();
+		ArrayList<WritableImage> images = new ArrayList<WritableImage>();
 
-        // Adding the verticies
+		// Adding the verticies
 
-        for (String user : socialNetwork.getAllUsers()) {
+		for (String user : socialNetwork.getAllUsers()) {
 
-            StackPane pane = new StackPane();
-            pane.setPrefSize(26, 26);
+			StackPane pane = new StackPane();
+			pane.setPrefSize(26, 26);
 
-            Circle circle = new Circle(23);
-            circle.setStroke(Color.BLACK);
-            circle.setFill(Color.WHITE);
-            circle.setStrokeWidth(3);
-            pane.getChildren().add(circle);
+			Circle circle = new Circle(23);
+			circle.setStroke(Color.BLACK);
+			circle.setFill(Color.WHITE);
+			circle.setStrokeWidth(3);
+			pane.getChildren().add(circle);
 
-            Text text = new Text(user);
-            pane.getChildren().add(text);
-            SnapshotParameters parameters = new SnapshotParameters();
-            parameters.setFill(Color.TRANSPARENT);
+			Text text = new Text(user);
+			pane.getChildren().add(text);
+			SnapshotParameters parameters = new SnapshotParameters();
+			parameters.setFill(Color.TRANSPARENT);
 
-            int[] coords = generateCoords(circles);
-            
-            WritableImage temp = pane.snapshot(parameters, null);
+			int[] coords = generateCoords(circles);
 
-            images.add(temp);
-            circles.add(new CircleData(coords[0], coords[1], user));
-        }
+			WritableImage temp = pane.snapshot(parameters, null);
 
-        // Adding all the edges
-        for (CircleData circle : circles) {
-        	List<User> circleFriends;
-        	try {
+			images.add(temp);
+			circles.add(new CircleData(coords[0], coords[1], user));
+		}
+
+		// Adding all the edges
+		for (CircleData circle : circles) {
+			List<User> circleFriends;
+			try {
 				circleFriends = socialNetwork.getFriends(circle.username);
 				for (User friend : circleFriends) {
-					
-					CircleData matchingCircle = new CircleData(0,0,"");
-					
+
+					CircleData matchingCircle = new CircleData(0, 0, "");
+
 					for (CircleData friendCircle : circles) {
 						if (friendCircle.username.equals(friend.username)) {
 							matchingCircle = friendCircle;
 						}
 					}
-	        		
+
 					gc.strokeLine(circle.x + 25, circle.y + 25, matchingCircle.x + 25, matchingCircle.y + 25);
-					
-	        	}
-				
+
+				}
+
 			} catch (UserNotFoundException e) {
-				
+
 			}
-        }
-        
-        for (int i = 0; i < images.size(); i++) {
-        	gc.drawImage(images.get(i), circles.get(i).x, circles.get(i).y);
-        }
+		}
 
-        // Adds content to scene
-        wrapper.setAlignment(Pos.CENTER);
-        wrapper.getChildren().add(graph);
-        wrapper.setStyle("-fx-background-color: #3490D1;");
-        contentBox.getChildren().addAll(navBar, wrapper);
+		for (int i = 0; i < images.size(); i++) {
+			gc.drawImage(images.get(i), circles.get(i).x, circles.get(i).y);
+		}
 
-        Scene graphScene = new Scene(contentBox);
+		// Adds content to scene
+		wrapper.setAlignment(Pos.CENTER);
+		wrapper.getChildren().add(graph);
+		wrapper.setStyle("-fx-background-color: #3490D1;");
+		contentBox.getChildren().addAll(navBar, wrapper);
 
-        // Makes window size of screen
-        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        window.setX(primaryScreenBounds.getMinX());
-        window.setY(primaryScreenBounds.getMinY());
-        window.setWidth(primaryScreenBounds.getWidth());
-        window.setHeight(primaryScreenBounds.getHeight());
+		Scene graphScene = new Scene(contentBox);
 
-        // Puts scene in window
-        window.setTitle(APP_TITLE);
-        window.setScene(graphScene);
-        window.show();
+		// Makes window size of screen
+		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+		window.setX(primaryScreenBounds.getMinX());
+		window.setY(primaryScreenBounds.getMinY());
+		window.setWidth(primaryScreenBounds.getWidth());
+		window.setHeight(primaryScreenBounds.getHeight());
+
+		// Puts scene in window
+		window.setTitle(APP_TITLE);
+		window.setScene(graphScene);
+		window.show();
 	}
 
 	/**
@@ -365,12 +365,14 @@ public class Main extends Application {
 				alert.showAndWait();
 			} else if (socialNetwork.getAllUsers().contains(addArea.getText())) {
 				Alert a = new Alert(AlertType.WARNING);
+				a.setTitle("Username Error");
 				a.setContentText("The user: " + addArea.getText() + " is already in the Social Network.");
 				a.show();
 				commands.add("a " + addArea.getText());
 			} else {
 				socialNetwork.addUser(addArea.getText());
 				Alert a = new Alert(AlertType.INFORMATION);
+				a.setTitle("Sucessfully Added!");
 				a.setContentText("The user: " + addArea.getText() + " has been added to the Social Network.");
 				a.show();
 				commands.add("a " + addArea.getText());
@@ -403,11 +405,13 @@ public class Main extends Application {
 				if (removeArea.getText().equals(centralUser))
 					centralUser = null;
 				Alert a = new Alert(AlertType.INFORMATION);
+				a.setTitle("Sucessfully Removed!");
 				a.setContentText("The user: " + removeArea.getText() + " has been removed from the Social Network.");
 				a.show();
 				commands.add("r " + addArea.getText());
 			} catch (UserNotFoundException e1) {
 				Alert a = new Alert(AlertType.ERROR);
+				a.setTitle("Username Error");
 				a.setContentText("This user does not exist in the Social Network. No changes were made.");
 				a.show();
 				commands.add("r " + addArea.getText());
@@ -577,6 +581,7 @@ public class Main extends Application {
 	/**
 	 * Screen of user friends
 	 */
+	@SuppressWarnings("unlikely-arg-type")
 	public void userInformation() {
 		// Initializes layout
 		contentBox = new VBox();
@@ -590,7 +595,7 @@ public class Main extends Application {
 		Label listLabel = new Label("Friends");
 		listLabel.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(40)));
 		listLabel.setPadding(new Insets(0, 0, 0, relativeWidth(170)));
-		ListView list = new ListView();
+		ListView<Text> list = new ListView<Text>();
 		list.setMinWidth(relativeWidth(500));
 		if (centralUser != null) {
 			try {
@@ -624,61 +629,67 @@ public class Main extends Application {
 		searchBar.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(30)));
 		Button searchButton = new Button("Search");
 		searchButton.setOnAction(e -> {
-			try {
-				if (!isValidName(searchBar.getText())) {
-					Alert alert = new Alert(AlertType.ERROR);
-					alert.setTitle("Username Error");
-					alert.setHeaderText(null);
-					alert.setContentText(searchBar.getText()
-							+ " is not a valid username, you may only use letters, digits, underscore and apostrophe characters");
-					alert.showAndWait();
-				} else if (socialNetwork.getFriends(centralUser).contains(searchBar.getText())) {
-					centralUser = searchBar.getText();
-					commands.add("s " + centralUser);
-					Alert alert = new Alert(AlertType.INFORMATION);
-					alert.setTitle("Confirmation");
-					alert.setHeaderText(null);
-					alert.setContentText(centralUser + " is now the central user!");
-					alert.showAndWait();
-				} else {
-					Alert alert = new Alert(AlertType.CONFIRMATION);
-					alert.setTitle("Confirmation");
-					alert.setHeaderText("User is not friends with " + centralUser);
-					alert.setContentText("Would you like to create a friendship with this user?");
-					Optional<ButtonType> result = alert.showAndWait();
-					if (result.get() == ButtonType.OK) {
-						commands.add("a " + centralUser + " " + searchBar.getText());
-						socialNetwork.addFriend(centralUser, searchBar.getText());
-						centralUser = searchBar.getText();
-						commands.add("s " + centralUser);
-						Alert alert1 = new Alert(AlertType.INFORMATION);
-						alert1.setTitle("Confirmation");
-						alert1.setHeaderText(null);
-						alert1.setContentText(searchBar.getText() + " is now friends with " + centralUser
-								+ " and is now the central user");
-						alert1.showAndWait();
-					}
-				}
-			} catch (UserNotFoundException ex) {
-				Alert alert = new Alert(AlertType.CONFIRMATION);
-				alert.setTitle("Confirmation");
-				alert.setHeaderText("Username was not found");
-				alert.setContentText("Would you like to create a user with this username?");
-				Optional<ButtonType> result = alert.showAndWait();
-				if (result.get() == ButtonType.OK) {
-					socialNetwork.addUser(searchBar.getText());
-					centralUser = searchBar.getText();
-					commands.add("a " + centralUser);
-					commands.add("s " + centralUser);
-					Alert alert1 = new Alert(AlertType.INFORMATION);
-					alert1.setTitle("Confirmation");
-					alert1.setHeaderText(null);
-					alert1.setContentText(centralUser + " is now the central user!");
-					alert1.showAndWait();
-				}
-			}
-			userInformation();
-		});
+            try {
+            	User textUser = null;
+            	for (User user : socialNetwork.getAllUserObj()) {
+            		if (user.username.equals(searchBar.getText())) {
+            			textUser = user;
+            		}
+            	}
+            	
+                if (!isValidName(searchBar.getText())) {
+                    Alert alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Username Error");
+                    alert.setHeaderText(null);
+                    alert.setContentText(searchBar.getText() + " is not a valid username, you may only use letters, digits, underscore and apostrophe characters");
+                    alert.showAndWait();
+                } else if (socialNetwork.getFriends(centralUser).contains(textUser)) {
+                    centralUser = searchBar.getText();
+                    commands.add("s " + centralUser);
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("Confirmation");
+                    alert.setHeaderText(null);
+                    alert.setContentText(centralUser + " is now the central user!");
+                    alert.showAndWait();
+                } else {
+                    Alert alert = new Alert(AlertType.CONFIRMATION);
+                    alert.setTitle("Confirmation");
+                    alert.setHeaderText("User is not friends with " + searchBar.getText());
+                    alert.setContentText("Would you like to create a friendship with this user?");
+                    Optional<ButtonType> result = alert.showAndWait();
+                    if (result.get() == ButtonType.OK) {
+                    	String oldCentralUser = centralUser;
+                        commands.add("a " + centralUser + " " + searchBar.getText());
+                        socialNetwork.addFriend(centralUser, searchBar.getText());
+                        centralUser = searchBar.getText();
+                        commands.add("s " + centralUser);
+                        Alert alert1 = new Alert(AlertType.INFORMATION);
+                        alert1.setTitle("Confirmation");
+                        alert1.setHeaderText(null);
+                        alert1.setContentText(searchBar.getText() + " is now friends with " + oldCentralUser + " and is now the central user");
+                        alert1.showAndWait();
+                    }
+                }
+            } catch (UserNotFoundException ex) {
+                Alert alert = new Alert(AlertType.CONFIRMATION);
+                alert.setTitle("Confirmation");
+                alert.setHeaderText("Username was not found");
+                alert.setContentText("Would you like to create a user with this username?");
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                    socialNetwork.addUser(searchBar.getText());
+                    centralUser = searchBar.getText();
+                    commands.add("a " + centralUser);
+                    commands.add("s " + centralUser);
+                    Alert alert1 = new Alert(AlertType.INFORMATION);
+                    alert1.setTitle("Confirmation");
+                    alert1.setHeaderText(null);
+                    alert1.setContentText(centralUser + " is now the central user!");
+                    alert1.showAndWait();
+                }
+            }
+            userInformation();
+        });
 		searchButton.setFont(Font.font("Arial", FontWeight.BOLD, relativeWidth(30)));
 		friendSearch.getChildren().addAll(currentUserArea, searchLabel, searchBar, searchButton);
 		friendSearch.setPadding(new Insets(relativeHeight(200), 0, 0, relativeWidth(200)));
