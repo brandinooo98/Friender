@@ -51,12 +51,12 @@ public interface SocialNetworkADT {
 	public void removeFriend(String user, String friend) throws UserNotFoundException;
 
 	/**
-	 * Preforms Dijsktra's shortest path traversal
+	 * Performs shortest path traversal
 	 *
 	 * @param username - User to start traversal from
 	 * @return - List of the path
 	 */
-	public List<User> shortestPath(String user);
+	public List<User> shortestPath(String username, String endUser);
 
 	/**
 	 * Prints commands to a file of a given name
