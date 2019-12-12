@@ -127,7 +127,7 @@ public class Graph implements GraphADT {
 	 * utility method to loop through the graph and find the User object that
 	 * corresponds to the String username that is given as a parameter
 	 * 
-	 * @param the username of the User object we want to find
+	 * @param username - username of the User object we want to find
 	 * @return the user object that corresponds the the parameter string
 	 * @throws UserNotFoundException if null is sent as a parameter or if there is
 	 *                               no user with the given username in the graph

@@ -1,5 +1,3 @@
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,19 +6,16 @@ import java.util.Random;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -28,7 +23,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.*;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.scene.image.Image;
 import javafx.scene.canvas.Canvas;
 
 /**
@@ -257,7 +251,6 @@ public class Main extends Application {
         }
 
         // Adding all the edges
-        
         for (CircleData circle : circles) {
         	List<User> circleFriends;
         	try {
